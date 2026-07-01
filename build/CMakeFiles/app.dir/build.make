@@ -85,19 +85,67 @@ CMakeFiles/app.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/app.dir/main.cpp.s"
 	C:\Users\Bahar\scoop\apps\MINGW\current\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Bahar\Desktop\project\main.cpp -o CMakeFiles\app.dir\main.cpp.s
 
+CMakeFiles/app.dir/game.cpp.obj: CMakeFiles/app.dir/flags.make
+CMakeFiles/app.dir/game.cpp.obj: C:/Users/Bahar/Desktop/project/game.cpp
+CMakeFiles/app.dir/game.cpp.obj: CMakeFiles/app.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Bahar\Desktop\project\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/app.dir/game.cpp.obj"
+	C:\Users\Bahar\scoop\apps\MINGW\current\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/app.dir/game.cpp.obj -MF CMakeFiles\app.dir\game.cpp.obj.d -o CMakeFiles\app.dir\game.cpp.obj -c C:\Users\Bahar\Desktop\project\game.cpp
+
+CMakeFiles/app.dir/game.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/app.dir/game.cpp.i"
+	C:\Users\Bahar\scoop\apps\MINGW\current\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Bahar\Desktop\project\game.cpp > CMakeFiles\app.dir\game.cpp.i
+
+CMakeFiles/app.dir/game.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/app.dir/game.cpp.s"
+	C:\Users\Bahar\scoop\apps\MINGW\current\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Bahar\Desktop\project\game.cpp -o CMakeFiles\app.dir\game.cpp.s
+
+CMakeFiles/app.dir/map.cpp.obj: CMakeFiles/app.dir/flags.make
+CMakeFiles/app.dir/map.cpp.obj: C:/Users/Bahar/Desktop/project/map.cpp
+CMakeFiles/app.dir/map.cpp.obj: CMakeFiles/app.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Bahar\Desktop\project\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/app.dir/map.cpp.obj"
+	C:\Users\Bahar\scoop\apps\MINGW\current\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/app.dir/map.cpp.obj -MF CMakeFiles\app.dir\map.cpp.obj.d -o CMakeFiles\app.dir\map.cpp.obj -c C:\Users\Bahar\Desktop\project\map.cpp
+
+CMakeFiles/app.dir/map.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/app.dir/map.cpp.i"
+	C:\Users\Bahar\scoop\apps\MINGW\current\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Bahar\Desktop\project\map.cpp > CMakeFiles\app.dir\map.cpp.i
+
+CMakeFiles/app.dir/map.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/app.dir/map.cpp.s"
+	C:\Users\Bahar\scoop\apps\MINGW\current\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Bahar\Desktop\project\map.cpp -o CMakeFiles\app.dir\map.cpp.s
+
+CMakeFiles/app.dir/space.cpp.obj: CMakeFiles/app.dir/flags.make
+CMakeFiles/app.dir/space.cpp.obj: C:/Users/Bahar/Desktop/project/space.cpp
+CMakeFiles/app.dir/space.cpp.obj: CMakeFiles/app.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Bahar\Desktop\project\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/app.dir/space.cpp.obj"
+	C:\Users\Bahar\scoop\apps\MINGW\current\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/app.dir/space.cpp.obj -MF CMakeFiles\app.dir\space.cpp.obj.d -o CMakeFiles\app.dir\space.cpp.obj -c C:\Users\Bahar\Desktop\project\space.cpp
+
+CMakeFiles/app.dir/space.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/app.dir/space.cpp.i"
+	C:\Users\Bahar\scoop\apps\MINGW\current\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Bahar\Desktop\project\space.cpp > CMakeFiles\app.dir\space.cpp.i
+
+CMakeFiles/app.dir/space.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/app.dir/space.cpp.s"
+	C:\Users\Bahar\scoop\apps\MINGW\current\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Bahar\Desktop\project\space.cpp -o CMakeFiles\app.dir\space.cpp.s
+
 # Object files for target app
 app_OBJECTS = \
-"CMakeFiles/app.dir/main.cpp.obj"
+"CMakeFiles/app.dir/main.cpp.obj" \
+"CMakeFiles/app.dir/game.cpp.obj" \
+"CMakeFiles/app.dir/map.cpp.obj" \
+"CMakeFiles/app.dir/space.cpp.obj"
 
 # External object files for target app
 app_EXTERNAL_OBJECTS =
 
 app.exe: CMakeFiles/app.dir/main.cpp.obj
+app.exe: CMakeFiles/app.dir/game.cpp.obj
+app.exe: CMakeFiles/app.dir/map.cpp.obj
+app.exe: CMakeFiles/app.dir/space.cpp.obj
 app.exe: CMakeFiles/app.dir/build.make
 app.exe: CMakeFiles/app.dir/linkLibs.rsp
 app.exe: CMakeFiles/app.dir/objects1.rsp
 app.exe: CMakeFiles/app.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\Users\Bahar\Desktop\project\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable app.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\Users\Bahar\Desktop\project\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable app.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\app.dir\link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

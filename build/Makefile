@@ -135,6 +135,30 @@ app/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\app.dir\build.make CMakeFiles/app.dir/build
 .PHONY : app/fast
 
+game.obj: game.cpp.obj
+.PHONY : game.obj
+
+# target to build an object file
+game.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\app.dir\build.make CMakeFiles/app.dir/game.cpp.obj
+.PHONY : game.cpp.obj
+
+game.i: game.cpp.i
+.PHONY : game.i
+
+# target to preprocess a source file
+game.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\app.dir\build.make CMakeFiles/app.dir/game.cpp.i
+.PHONY : game.cpp.i
+
+game.s: game.cpp.s
+.PHONY : game.s
+
+# target to generate assembly for a file
+game.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\app.dir\build.make CMakeFiles/app.dir/game.cpp.s
+.PHONY : game.cpp.s
+
 main.obj: main.cpp.obj
 .PHONY : main.obj
 
@@ -159,6 +183,54 @@ main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\app.dir\build.make CMakeFiles/app.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+map.obj: map.cpp.obj
+.PHONY : map.obj
+
+# target to build an object file
+map.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\app.dir\build.make CMakeFiles/app.dir/map.cpp.obj
+.PHONY : map.cpp.obj
+
+map.i: map.cpp.i
+.PHONY : map.i
+
+# target to preprocess a source file
+map.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\app.dir\build.make CMakeFiles/app.dir/map.cpp.i
+.PHONY : map.cpp.i
+
+map.s: map.cpp.s
+.PHONY : map.s
+
+# target to generate assembly for a file
+map.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\app.dir\build.make CMakeFiles/app.dir/map.cpp.s
+.PHONY : map.cpp.s
+
+space.obj: space.cpp.obj
+.PHONY : space.obj
+
+# target to build an object file
+space.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\app.dir\build.make CMakeFiles/app.dir/space.cpp.obj
+.PHONY : space.cpp.obj
+
+space.i: space.cpp.i
+.PHONY : space.i
+
+# target to preprocess a source file
+space.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\app.dir\build.make CMakeFiles/app.dir/space.cpp.i
+.PHONY : space.cpp.i
+
+space.s: space.cpp.s
+.PHONY : space.s
+
+# target to generate assembly for a file
+space.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\app.dir\build.make CMakeFiles/app.dir/space.cpp.s
+.PHONY : space.cpp.s
+
 # Help Target
 help:
 	@echo The following are some of the valid targets for this Makefile:
@@ -169,9 +241,18 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... app
+	@echo ... game.obj
+	@echo ... game.i
+	@echo ... game.s
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s
+	@echo ... map.obj
+	@echo ... map.i
+	@echo ... map.s
+	@echo ... space.obj
+	@echo ... space.i
+	@echo ... space.s
 .PHONY : help
 
 

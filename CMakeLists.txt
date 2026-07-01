@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 4.2.0)
 
 project(
-    Unmached
+    Unmatched
 )
 
-add_executable(app main.cpp)
+add_executable(app main.cpp game.cpp map.cpp space.cpp)

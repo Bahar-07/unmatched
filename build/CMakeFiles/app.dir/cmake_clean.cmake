@@ -1,6 +1,12 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/app.dir/game.cpp.obj"
+  "CMakeFiles/app.dir/game.cpp.obj.d"
   "CMakeFiles/app.dir/main.cpp.obj"
   "CMakeFiles/app.dir/main.cpp.obj.d"
+  "CMakeFiles/app.dir/map.cpp.obj"
+  "CMakeFiles/app.dir/map.cpp.obj.d"
+  "CMakeFiles/app.dir/space.cpp.obj"
+  "CMakeFiles/app.dir/space.cpp.obj.d"
   "app.exe"
   "app.exe.manifest"
   "app.pdb"

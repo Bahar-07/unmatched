@@ -157,7 +157,7 @@ CMAKE_PROJECT_DESCRIPTION:STATIC=
 CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=Unmached
+CMAKE_PROJECT_NAME:STATIC=Unmatched
 
 //Value Computed by CMake
 CMAKE_PROJECT_SPDX_LICENSE:STATIC=
@@ -253,6 +253,15 @@ Unmached_IS_TOP_LEVEL:STATIC=ON
 
 //Value Computed by CMake
 Unmached_SOURCE_DIR:STATIC=C:/Users/Bahar/Desktop/project
+
+//Value Computed by CMake
+Unmatched_BINARY_DIR:STATIC=C:/Users/Bahar/Desktop/project/build
+
+//Value Computed by CMake
+Unmatched_IS_TOP_LEVEL:STATIC=ON
+
+//Value Computed by CMake
+Unmatched_SOURCE_DIR:STATIC=C:/Users/Bahar/Desktop/project
 
 
 ########################
