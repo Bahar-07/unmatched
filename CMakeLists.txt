@@ -4,4 +4,4 @@ project(
     Unmatched
 )
 
-add_executable(app main.cpp game.cpp map.cpp space.cpp)
+add_executable(app main.cpp game.cpp map.cpp space.cpp character.cpp card.cpp)

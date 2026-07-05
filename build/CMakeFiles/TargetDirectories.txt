@@ -1,3 +1,0 @@
-C:/Users/Bahar/Desktop/project/build/CMakeFiles/app.dir
-C:/Users/Bahar/Desktop/project/build/CMakeFiles/edit_cache.dir
-C:/Users/Bahar/Desktop/project/build/CMakeFiles/rebuild_cache.dir

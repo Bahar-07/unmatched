@@ -1,15 +1,16 @@
-#include <iostream>
+
 #include "space.h"
 #include "map.h"
 #include "game.h"
 #include <stdlib.h>
+#include <iostream>
 using namespace std;
 
 int welcome()
 {
     int a;
     
-    cout << "          main menu          " <<endl;
+    cout << "                    main menu                    " <<endl;
     cout <<"1 . Play" <<endl << "2 . Help" << endl << "3 . Exit" << endl;
     cin >> a;
     if(a > 3 || a < 1)
@@ -21,7 +22,7 @@ int welcome()
 
 int main()
 {   
-    cout << "          UNMATCHED          " <<endl;
+    cout << "                    UNMATCHED                    " <<endl;
     int test;
     while(true)
     {
@@ -38,6 +39,7 @@ int main()
     
     if( test == 1)
     {
+        map g;
         cout << "Enter your name..." << endl << "player 1. " ;
         game player1;
         cout << "Enter your name..." << endl << "player 2. " ;
@@ -46,7 +48,7 @@ int main()
         {
             try
             {
-                player1.age(player2);
+                player1.age(player2 , g);
                 break;
             }
             catch(const std::exception& e)
@@ -55,8 +57,46 @@ int main()
             }
             
         }
-        
+        if(player1.get_age() == "younger")
+        {
+            cout <<player1.get_name_player() << " start the game!!!" << endl;
+            while(player1.alive() && player2.alive())
+            {
+                player1.start_game(player2 , g);
+                if(!player1.alive() || !player2.alive())
+                    break;
+                player2.start_game(player1 , g);
+            }
+            if(player1.alive() && !player2.alive())
+            {
+                cout << player1.get_name_player() << " WIN!!!" << endl;
+            }
+            else if(!player1.alive() && player2.alive())
+            {
+                cout << player2.get_name_player() << " WIN!!!" << endl;
+            }
+        }
+        else
+        {
+            cout << player2.get_name_player() << " start the game!!!" << endl;
+             while(player1.alive() && player2.alive())
+            {
+                player2.start_game(player1 , g);
+                if(!player1.alive() || !player2.alive())
+                    break;
+                player1.start_game(player2 , g);
+            }
+            if(player1.alive() && !player2.alive())
+            {
+                cout << player1.get_name_player() << " WIN!!!" << endl;
+            }
+            else if(!player1.alive() && player2.alive())
+            {
+                cout << player2.get_name_player() << " WIN!!!" << endl;
+            }
+        }
     }
+    
     if(test == 2)
     {
         while(true)
@@ -75,7 +115,7 @@ int main()
     if(test == 3)
     {
         cout << "Game Exited" << endl;
-        exit;
+        exit(0);
     }
     return 0;
 }

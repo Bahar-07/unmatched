@@ -1,4 +1,5 @@
 #include "map.h"
+#include "space.h"
 #include <iostream>
 
 map::map()
@@ -142,4 +143,57 @@ void map::neighborr()
     get_space(31)->add_neighbor(get_space(30));
     get_space(32)->add_neighbor(get_space(30));
     get_space(32)->add_neighbor(get_space(31));
+}
+void map::show_map()
+{
+    for(space s: spaces)
+    {
+        s.show_space();
+    }
+}
+void map::set_location(std::string b , int a)
+{
+    for(space &s:spaces)
+    {
+        if(s.get_id() == a)
+        {
+            s.set_thisspacet(b);
+        }
+    }
+}
+int map::move(std::string c ,int l , character& hero)
+{
+    int ch;
+    std::cout << "choose a space to go  " << std::endl ;
+    for(space &s:spaces)
+    {
+        if(s.get_id() == l)
+        {
+            s.show_neighbors();
+            if(s.get_secret())
+            {
+                if(l == 1)
+                {
+                    std::cout << "12" << std::endl << "29" << std::endl << "16" << std::endl;
+                }
+                if(l == 12)
+                {
+                    std::cout << "1" << std::endl << "29" << std::endl << "16" << std::endl;
+                }
+                if(l == 29)
+                {
+                    std::cout << "1" << std::endl << "12" << std::endl << "16" << std::endl;
+                }
+                if(l == 16)
+                {
+                    std::cout << "12" << std::endl << "29" << std::endl << "1" << std::endl;
+                }
+            }
+            s.set_thisspacef();
+        }
+    }
+    std::cin >> ch;
+    hero.set_location(get_space(ch));
+    set_location(c ,ch);
+    return ch;
 }
