@@ -33,7 +33,11 @@ class space
         void show_space();
         void set_thisspacet(std::string);
         void set_thisspacef();
-        
+        std::string get_thisspace();
         void show_neighbors();
+        bool show_full_neighbors();
+        bool get_dracula_neighbors();
+        bool get_sherlock_neighbors();
+        int prey_uponn();
 };
 #endif

@@ -161,10 +161,10 @@ void map::set_location(std::string b , int a)
         }
     }
 }
-int map::move(std::string c ,int l , character& hero)
+int map::move(std::string c ,int l , character& character)
 {
     int ch;
-    std::cout << "choose a space to go  " << std::endl ;
+    std::cout << "where do you whant to go?" << std::endl ;
     for(space &s:spaces)
     {
         if(s.get_id() == l)
@@ -193,7 +193,176 @@ int map::move(std::string c ,int l , character& hero)
         }
     }
     std::cin >> ch;
-    hero.set_location(get_space(ch));
+    character.set_location(get_space(ch));
     set_location(c ,ch);
     return ch;
+}
+void map::move2(character&h)
+{
+    int a;
+    std::cout << "where do you want to go? (1  32)" << std::endl;
+    std::cin >> a;
+    if(a> 32 || a < 1)
+    {
+        throw std::invalid_argument("please choose (1 - 32)");
+    }
+    else
+    {
+        for(space &s:spaces)
+        {
+            if(s.get_id() == a)
+            {
+                if(s.get_thisspace() == "e")
+                {
+                    h.set_location(get_space(a));
+                    set_location("Dracula" ,a);
+                }
+                else
+                {
+                    std::cout << "this space isnt empty" << std::endl;
+                    move2(h);
+                }
+            }
+        }
+    }
+
+}
+void map::move3(character & h , character & si , map& g)
+{
+
+    int a;
+    std::cout << "where do you want to go? (1  32 (pay attention to the zone color))" << std::endl;
+    std::cin >> a;
+    if(a> 32 || a < 1)
+    {
+        throw std::invalid_argument("please choose (1 - 32)");
+    }
+    else
+    {
+        int t = 0;
+        int i = h.get_location()->get_zone().size();
+        int j = g.get_space(a)->get_zone().size();
+        for(int z= 0 ; z < i ; z++)
+        {
+            for(int m = 0 ; m < j ; m++)
+            {
+                if(h.get_location()->get_zone()[z] == g.get_space(a)->get_zone()[m])
+                {
+                    t+=1;
+                }
+            }
+        }
+        if(t == 0)
+        {
+            std::cout << "you cant choose this space" << std::endl;
+            move3(h,si,g);
+        } 
+        else
+        {
+            for(space &s:spaces)
+            {
+                
+                if(s.get_id() == a)
+                {
+                    if(s.get_thisspace() == "e")
+                    {
+                        si.set_location(get_space(a));
+                        set_location(si.get_name() ,a);
+                    }
+                    else
+                    {
+                        std::cout << "this space isnt empty" << std::endl;
+                        move3(h , si , g);
+                    }
+                }
+            }
+        }
+    }
+}
+bool map::neighbor_status(character& h)
+{
+    for(space &s:spaces)
+    {
+        if(s.get_id() == h.get_location()->get_id())
+        {
+            std::cout << "your neighbors are:" << std::endl;
+            if(s.show_full_neighbors())
+            {
+                return true;
+            }
+            else
+            {
+                std::cout << "dont have any neighbors..." << std::endl;
+                return false;
+            }
+        }
+    }
+}
+bool map::get_draculaandsisters_neighbors(character & h)
+{
+    for(space &s:spaces)
+    {
+        if(s.get_id() == h.get_location()->get_id())
+        {
+            
+            std::cout << "your neighbors are:" << std::endl;
+            if(s.get_dracula_neighbors())
+            {
+                return true;
+            }
+            else
+            {
+                std::cout << "dont have any neighbors..." << std::endl;
+                return false;
+            }
+        }
+    }
+}
+bool map::get_sherlock_neighbors(character & h)
+{
+    for(space &s:spaces)
+    {
+        if(s.get_id() == h.get_location()->get_id())
+        {
+            
+            std::cout << "your neighbors are:" << std::endl;
+            if(s.get_sherlock_neighbors())
+            {
+                return true;
+            }
+            else
+            {
+                std::cout << "dont have any neighbors..." << std::endl;
+                return false;
+            }
+        }
+    }
+}
+int map::pray_upon(character& h)
+{
+    for(space &s:spaces)
+    {
+        if(s.get_id() == h.get_location()->get_id())
+        {
+            if(s.prey_uponn() == 3)
+            {
+                h.set_hp(h.get_hp()+ 2);
+                return 3;
+            }
+            if(s.prey_uponn() == 2)
+            {
+                h.set_hp(h.get_hp()+ 1);
+                return 2;
+            }
+            if(s.prey_uponn() == 1)
+            {
+                h.set_hp(h.get_hp()+ 1);
+                return 1;
+            }
+            if(s.prey_uponn() == 0)
+            {
+                return 0;
+            }
+        }
+    }
 }

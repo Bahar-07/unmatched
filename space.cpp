@@ -201,12 +201,101 @@ void space::set_thisspacef()
 {
     thisspace = "e";
 }
-
+std::string space::get_thisspace()
+{
+    return thisspace;
+}
 void space::show_neighbors()
 {
     for(space *s:neighbors)
     {
-        cout << s->get_id() <<endl;
+        if(s->get_thisspace() == "e")
+            cout << s->get_id() <<endl;
     }
-    
+}
+bool space::show_full_neighbors()
+{
+    int e = 0;
+    for(space *s:neighbors)
+    {
+        if(s->get_thisspace() != "e")
+        {
+            cout << s->get_id() << ". " << s->get_thisspace() << endl ;
+           e++; 
+        }
+    }
+    if(e != 0)
+    {
+        return true;
+    }
+    return false;
+}
+bool space::get_dracula_neighbors()
+{
+    int e = 0; 
+    for(space *s:neighbors)
+    {
+        if(s->get_thisspace() == "Sherlock Holmes" || s->get_thisspace() == "Dr.Watson" )
+        {
+            cout << s->get_id() << ". " << s->get_thisspace() << endl ;
+            e++;
+        }
+        
+    }
+    if( e != 0)
+    {
+        return true;
+    }
+    return false;
+}
+bool space::get_sherlock_neighbors()
+{
+    int e = 0; 
+    for(space *s:neighbors)
+    {
+        if(s->get_thisspace() == "Dracula" || s->get_thisspace() == "sister 1" || s->get_thisspace() == "sister 2" || s->get_thisspace() == "sister 3" )
+        {
+            cout << s->get_id() << ". " << s->get_thisspace() << endl ;
+            e++;
+        }
+        
+    }
+    if( e != 0)
+    {
+        return true;
+    }
+    return false;
+}
+int space::prey_uponn()
+{
+    int sh = 0;
+    int dr = 0; 
+    for(space *s:neighbors)
+    {
+        if(s->get_thisspace() == "Sherlock Holmes")
+        {
+            sh++;
+        }
+        if(s->get_thisspace() == "Dr.Watson")
+        {
+            dr++;
+        } 
+        
+    }
+    if( dr == 1 && sh == 1)
+    {
+        return  3;
+    }
+    if(sh == 1)
+    {
+        return 2;
+    }
+    if(dr == 1)
+    {
+        return 1;
+    }
+    if(dr == 0 && sh == 0)
+    {
+        return 0; 
+    }
 }

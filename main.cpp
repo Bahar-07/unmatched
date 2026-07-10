@@ -4,6 +4,8 @@
 #include "game.h"
 #include <stdlib.h>
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 using namespace std;
 
 int welcome()
@@ -22,6 +24,7 @@ int welcome()
 
 int main()
 {   
+    srand(time(NULL));
     cout << "                    UNMATCHED                    " <<endl;
     int test;
     while(true)
@@ -57,8 +60,11 @@ int main()
             }
             
         }
+        player1.creat_deck();
+        player2.creat_deck();
         if(player1.get_age() == "younger")
         {
+            player1.pick_card(player2);
             cout <<player1.get_name_player() << " start the game!!!" << endl;
             while(player1.alive() && player2.alive())
             {
@@ -78,6 +84,7 @@ int main()
         }
         else
         {
+            player2.pick_card(player1);
             cout << player2.get_name_player() << " start the game!!!" << endl;
              while(player1.alive() && player2.alive())
             {

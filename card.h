@@ -36,5 +36,12 @@ class card
     public:
         card();
         card(std::string , cardtype , cardowner , timing , int , int );
+        std::string get_name();
+        cardtype get_type();
+        cardowner get_owner();
+        int get_boost();
+        void set_boost(int);
+        void set_value(int);
+        void show_card();
 };
 #endif
