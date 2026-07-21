@@ -1,5 +1,7 @@
 #include "game.h"
+#include "tui.h"
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -11,369 +13,293 @@ game::game()
     alivee = true;
     action = 2;
 }
-void game::age(game &enemy , map& g)
+void game::age(game &enemy , map& g , tui t)
 {
-    cout << "Who is younger?    1 . " << name << "    2 . " << enemy.name << endl;
+    
     int a;
-    cin >> a;
-    if(a == 1)
+    a = t.agee(name , enemy.name);
+    if(a == 0)
     {
         yoro = "younger";
         enemy.yoro = "older";
-        cout  << name << " please choose one of these characters ... (1.Dracula    2.Sherlock Holmes)" << endl;
+        cout  << name << " please choose one of these characters" << endl;
     }
-    if(a == 2)
+    if(a == 1)
     {
         yoro = "older";
         enemy.yoro = "younger";
-        cout  << enemy.name << " please choose one of these characters ... (1.Dracula    2.Sherlock Holmes)" << endl;
+        cout  << enemy.name << " please choose one of these characters" << endl;
     }
-    if(a > 2 || a < 1)
-    {
-        throw invalid_argument("please enter 1 or 2");
-    }
-    choose_character(enemy , g);
 }
-void game::choose_character(game& enemy , map& g)
+void game::choose_character(game& enemy , map& g , tui t)
 {
-    int a;
-    cin >> a;
-    if(a ==1)
+    int a = t.choose_character();
+    if(a ==0)
     {
-        if(yoro == "younger")
-        {
-            hero = character("Dracula" , 13 , 2);
+        hero = character("Dracula" , 13 , 2 , "melee");
 
-            sidekicks.push_back(character("Sister 1", 1 , 2));
-            sidekicks.push_back(character("Sister 2", 1 , 2));
-            sidekicks.push_back(character("Sister 3", 1 , 2));
-            enemy.hero =character("Sherlock Holmes", 16 , 2);
-            enemy.sidekicks.push_back(character("Dr. Watson", 8 , 2));
-
-        }
-        else
-        {
-            enemy.hero = character("Dracula" , 13  , 2);
-            enemy.sidekicks.push_back(character("Sister 1", 1 , 2));
-            enemy.sidekicks.push_back(character("Sister 2", 1 , 2));
-            enemy.sidekicks.push_back(character("Sister 3", 1 , 2));
-            hero =character("Sherlock Holmes", 16 , 2);
-            sidekicks.push_back(character("Dr. Watson", 8 , 2));
-        }
+        sidekicks.push_back(character("sister 1", 1 , 2 , "melee"));
+        sidekicks.push_back(character("sister 2", 1 , 2 , "melee"));
+        sidekicks.push_back(character("sister 3", 1 , 2 , "melee"));
+        enemy.hero =character("Sherlock Holmes", 16 , 2 , "melee");
+        enemy.sidekicks.push_back(character("Dr.Watson", 8 , 2 , "ranged"));
     }
-    else if(a == 2)
+    else if(a == 1)
     {
-        if(yoro == "younger")
-        {
-            enemy.hero = character("Dracula" , 13 , 2);
-            enemy.sidekicks.push_back(character("Sister 1", 1 , 2));
-            enemy.sidekicks.push_back(character("Sister 2", 1 , 2));
-            enemy.sidekicks.push_back(character("Sister 3", 1 , 2));
-            hero =character("Sherlock Holmes", 16 , 2);
-            sidekicks.push_back(character("Dr. Watson", 8 , 2));
-        }
-        else
-        {
-            hero = character("Dracula" , 13 , 2);
-            sidekicks.push_back(character("Sister 1", 1 , 2));
-            sidekicks.push_back(character("Sister 2", 1 , 2));
-            sidekicks.push_back(character("Sister 3", 1 , 2));
-            enemy .hero =character("Sherlock Holmes", 16 , 2);
-            enemy.sidekicks.push_back(character("Dr. Watson", 8 , 2));
-        }
+        enemy.hero = character("Dracula" , 13 , 2 , "melee");
+        enemy.sidekicks.push_back(character("sister 1", 1 , 2 , "melee"));
+        enemy.sidekicks.push_back(character("sister 2", 1 , 2, "melee"));
+        enemy.sidekicks.push_back(character("sister 3", 1 , 2, "melee"));
+        hero =character("Sherlock Holmes", 16 , 2 , "melee");
+        sidekicks.push_back(character("Dr.Watson", 8 , 2, "ranged"));
     }
-    else
-    {
-        cout << "Erorr: please choose one of these characters ... (1.Dracula    2.Sherlock Holmes)";
-        choose_character(enemy , g);
-    }
-    choose_location(enemy , g);
+    choose_location(enemy , g , t);
 
 }
-void game::choose_location(game& enemy , map& g)
-{
-    
+void game::choose_location(game& enemy , map& g , tui tt)
+{ 
     int a;
     int r;
-    cout << "please choose one of these spaces ... (5 , 25)" << endl;
-    
-    g.get_space(5)->show_space();
-    g.get_space(25)->show_space();    
-    cin >> a;
-    if(a ==5)
+    int s;
+    int t;
+    g.show_map();
+    a = tt.choose_space(g, "please choose one of these spaces" , {5 ,25});
+    if(a == 0)
     {
-        if(yoro == "younger")
+        if(hero.get_name() == "Dracula")
         {
-            if(hero.get_name() == "Dracula")
+            vector<int> spaces ={1 , 2 , 3 , 4 , 7};
+            hero.set_location(g.get_space(5));
+            enemy.hero.set_location(g.get_space(25));
+            g.set_location("Dracula" , 5);
+            g.set_location("Sherlock Holmes" , 25);
+            int index = tt.choose_space(g ,name+ " please choose 3 spaces for your sisters" , {1 , 2 , 3 , 4 , 7});
+            r = spaces[index];
+                if(r ==1 || r == 2 || r == 3 || r == 4 || r == 7)
+                {
+                    sidekicks[0].set_location(g.get_space(r));
+                    g.set_location("sister 1" , r);
+                }
+            
+            while (true)
             {
-                hero.set_location(g.get_space(5));
-                enemy.hero.set_location(g.get_space(25));
-                g.set_location("Dracula" , a);
-                g.set_location("Sherlock Holmes" , 25);
-                cout << name << "please choose 3 spaces for your sisters (1 , 2 , 3 , 4 , 7)" <<endl;
-                g.get_space(1)->show_space();
-                g.get_space(2)->show_space();
-                g.get_space(3)->show_space();
-                g.get_space(4)->show_space();
-                g.get_space(7)->show_space();
-                cin >> r;
-                sidekicks[0].set_location(g.get_space(r));
-                g.set_location("sister 1" , r);
-                cin >> r;
-                sidekicks[1].set_location(g.get_space(r));
-                g.set_location("sister 2" , r);
-                cin >> r;
-                sidekicks[2].set_location(g.get_space(r));
-                g.set_location("sister 3" , r);
-                
-                cout << enemy.name << "please choose a spaces for Dr.Watson (14 , 23 , 24 , 26)" <<endl;
-                g.get_space(14)->show_space();
-                g.get_space(23)->show_space();
-                g.get_space(24)->show_space();
-                g.get_space(26)->show_space();
-                cin >> r;
-                enemy.sidekicks[0].set_location(g.get_space(r));
-                g.set_location("Dr.Watson" , r);
+                index = tt.choose_space(g ,name+ " please choose 3 spaces for your sisters" , {1 , 2 , 3 , 4 , 7});
+                s = spaces[index];
+                if((s ==1 || s == 2 || s == 3 || s == 4 || s == 7) && s != r)
+                {
+                    sidekicks[1].set_location(g.get_space(s));
+                    g.set_location("sister 2" , s);
+                    break;
+                }
+                else
+                {
+                    cout << "invalid number ... please choose another space" << endl;
+                }
+            }
+            while (true)
+            {
 
+                index = tt.choose_space(g ,name+ " please choose 3 spaces for your sisters" , {1 , 2 , 3 , 4 , 7});
+                t = spaces[index];
+                if((t ==1 || t == 2 || t == 3 || t == 4 || t == 7) && t != r && t != s)
+                {
+                    sidekicks[2].set_location(g.get_space(t));
+                    g.set_location("sister 3" , t);
+                    break;
+                }
+                else
+                {
+                    cout << "invalid number ... please choose another space" << endl;
+                }
             }
-            else
+            spaces.clear();
+            vector<int> spacess ={14 , 23 , 24 , 26};
+            index = tt.choose_space(g ,enemy.name + " please choose a spaces for Dr.Watson" , {14 , 23 , 24 , 26});
+            r = spacess[index];
+            if(r ==14 || r == 23 || r == 24 || r == 26)
             {
-                hero.set_location(g.get_space(5));
-                enemy.hero.set_location(g.get_space(25));
-                g.set_location("Sherlock Holmes" , a);
-                g.set_location("Dracula" , 25);
-                cout << name << " please choose a spaces for Dr.Watson (1 , 2 , 3 , 4 , 7)" <<endl;
-                g.get_space(1)->show_space();
-                g.get_space(2)->show_space();
-                g.get_space(3)->show_space();
-                g.get_space(4)->show_space();
-                g.get_space(7)->show_space();
-                
-                cin >> r;
-                sidekicks[0].set_location(g.get_space(r));
-                g.set_location("Dr.Watson" , r);
-                cout << enemy.name << " please choose 3 spaces for your sisters (14 , 23 , 24 , 26)" << endl;
-                g.get_space(14)->show_space();
-                g.get_space(23)->show_space();
-                g.get_space(24)->show_space();
-                g.get_space(26)->show_space();
-                cin >> r;
                 enemy.sidekicks[0].set_location(g.get_space(r));
-                g.set_location("sister 1" , r);
-                cin >> r;
-                enemy.sidekicks[1].set_location(g.get_space(r));
-                g.set_location("sister 2" , r);
-                cin >> r;
-                enemy.sidekicks[2].set_location(g.get_space(r));
-                g.set_location("sister 3" , r);
-                
+                g.set_location("Dr.Watson" , r);
             }
+            spacess.clear();
         }
         else
         {
-            if(enemy.hero.get_name() == "Dracula")
+            hero.set_location(g.get_space(5));
+            enemy.hero.set_location(g.get_space(25));
+            g.set_location("Sherlock Holmes" , 5);
+            g.set_location("Dracula" , 25);
+            vector<int> spaces ={1 , 2 , 3 , 4 , 7};
+            int index = tt.choose_space(g ,name + " please choose a spaces for Dr.Watson" , {1 , 2 , 3 , 4 , 7});
+            r = spaces[index];
+           
+            if(r ==1 || r == 2 || r == 3 || r == 4 || r == 7)
             {
-                hero.set_location(g.get_space(25));
-                enemy.hero.set_location(g.get_space(5));
-                g.set_location("Dracula" , a);
-                g.set_location("Sherlock Holmes" , 25);
-                cout << enemy.name << " please choose 3 spaces for your sisters (1 , 2 , 3 , 4 , 7)" <<endl;
-                g.get_space(1)->show_space();
-                g.get_space(2)->show_space();
-                g.get_space(3)->show_space();
-                g.get_space(4)->show_space();
-                g.get_space(7)->show_space();
-                cin >> r;
-                enemy.sidekicks[0].set_location(g.get_space(r));
-                g.set_location("sister 1" , r);
-                cin >> r;
-                enemy.sidekicks[1].set_location(g.get_space(r));
-                g.set_location("sister 2" , r);
-                cin >> r;
-                enemy.sidekicks[2].set_location(g.get_space(r));
-                g.set_location("sister 3" , r);
-                cout << name << " please choose a spaces for Dr.Watson (14 , 23 , 24 , 26)" << endl;
-                g.get_space(14)->show_space();
-                g.get_space(23)->show_space();
-                g.get_space(24)->show_space();
-                g.get_space(26)->show_space();
-                cin >> r;
                 sidekicks[0].set_location(g.get_space(r));
                 g.set_location("Dr.Watson" , r);
-
+            
             }
-            else
+            spaces.clear();
+            vector<int> spacess ={14 , 23 , 24 , 26};
+            index = tt.choose_space(g ,enemy.name + " please choose 3 spaces for your sisters " , {14 , 23 , 24 , 26});
+            r = spacess[index];
+            
+            if(r ==14 || r == 23 || r == 24 || r == 26 )
             {
-                hero.set_location(g.get_space(25));
-                enemy.hero.set_location(g.get_space(5));
-                g.set_location("Sherlock Holmes" , a);
-                g.set_location("Dracula" , 25);
-                cout << enemy.name << " please choose a spaces for Dr.Watson (1 , 2 , 3 , 4 , 7)" << endl;
-                g.get_space(1)->show_space();
-                g.get_space(2)->show_space();
-                g.get_space(3)->show_space();
-                g.get_space(4)->show_space();
-                g.get_space(7)->show_space();
-                
-                cin >> r;
                 enemy.sidekicks[0].set_location(g.get_space(r));
-                g.set_location("Dr.Watson" , r);
-                cout << name << " please choose 3 spaces for your sisters (14 , 23 , 24 , 26)" <<endl;
-                g.get_space(14)->show_space();
-                g.get_space(23)->show_space();
-                g.get_space(24)->show_space();
-                g.get_space(26)->show_space();
-                cin >> r;
-                sidekicks[0].set_location(g.get_space(r));
                 g.set_location("sister 1" , r);
-                cin >> r;
-                sidekicks[1].set_location(g.get_space(r));
-                g.set_location("sister 2" , r);
-                cin >> r;
-                sidekicks[2].set_location(g.get_space(r));
-                g.set_location("sister 3" , r);
             }
+               
+            while (true)
+            {
+                index = tt.choose_space(g ,enemy.name + " please choose 3 spaces for your sisters " , {14 , 23 , 24 , 26});
+                s = spacess[index];
+                if((s ==14 || s == 23 || s == 24 || s == 26 ) && s != r)
+                {
+                    enemy.sidekicks[1].set_location(g.get_space(s));
+                    g.set_location("sister 2" , s);
+                    break;
+                }
+                else
+                {
+                    cout << "invalid number ... please choose another space" << endl;
+                }
+            }
+            while (true)
+            {
+                index = tt.choose_space(g ,enemy.name + " please choose 3 spaces for your sisters " , {14 , 23 , 24 , 26});
+                t = spacess[index];
+                if((t ==14 || t == 23 || t == 24 || t == 26 ) && t != r && t != s)
+                {
+                    enemy.sidekicks[2].set_location(g.get_space(t));
+                    g.set_location("sister 3" , t);
+                    break;
+                }
+                else
+                {
+                    cout << "invalid number ... please choose another space" << endl;
+                }
+            }
+            spacess.clear();
         }
     }
-    else if(a == 25)
+    else if(a == 1)
     {
-        if(yoro == "younger")
+        if(hero.get_name() == "Dracula")
         {
-            if(hero.get_name() == "Dracula")
+            hero.set_location(g.get_space(25));
+            enemy.hero.set_location(g.get_space(5));
+            g.set_location("Dracula" , 25);
+            g.set_location("Sherlock Holmes" , 5);
+            vector<int> spaces ={14 , 23 , 24 , 26};
+            int index = tt.choose_space(g ,name + " please choose 3 spaces for your sisters " , {14 , 23 , 24 , 26});
+            r = spaces[index];
+                if(r ==14 || r == 23 || r == 24 || r == 26 )
+                {
+                    sidekicks[0].set_location(g.get_space(r));
+                    g.set_location("sister 1" , r);
+                }
+            while (true)
             {
-                hero.set_location(g.get_space(25));
-                enemy.hero.set_location(g.get_space(5));
-                g.set_location("Dracula" , a);
-                g.set_location("Sherlock Holmes" , 5);
-                cout << name << "please choose 3 spaces for your sisters (14 , 23 , 24 , 26)" << endl;
-                g.get_space(14)->show_space();
-                g.get_space(23)->show_space();
-                g.get_space(24)->show_space();
-                g.get_space(26)->show_space();
-                cin >> r;
-                sidekicks[0].set_location(g.get_space(r));
-                g.set_location("sister 1" , r);
-                cin >> r;
-                sidekicks[1].set_location(g.get_space(r));
-                g.set_location("sister 2" , r);
-                cin >> r;
-                sidekicks[2].set_location(g.get_space(r));
-                g.set_location("sister 3" , r);
-                 cout << enemy.name << " please choose a spaces for Dr.Watson (1 , 2 , 3 , 4 , 7)" << endl;
-                g.get_space(1)->show_space();
-                g.get_space(2)->show_space();
-                g.get_space(3)->show_space();
-                g.get_space(4)->show_space();
-                g.get_space(7)->show_space();
-                cin >> r;
+                index = tt.choose_space(g ,name + " please choose 3 spaces for your sisters " , {14 , 23 , 24 , 26});
+                s = spaces[index];
+                if((s ==14 || s == 23 || s == 24 || s == 26 ) && s != r)
+                {
+                    sidekicks[1].set_location(g.get_space(s));
+                    g.set_location("sister 2" , s);
+                    break;
+                }
+                else
+                {
+                    cout << "invalid number ... please choose another space" << endl;
+                }
+            }
+            while (true)
+            {
+                index = tt.choose_space(g ,name + " please choose 3 spaces for your sisters " , {14 , 23 , 24 , 26});
+                t = spaces[index];
+                if((t ==14 || t == 23 || t == 24 || t == 26 ) && t != r && t != s)
+                {
+                    sidekicks[2].set_location(g.get_space(t));
+                    g.set_location("sister 3" , t);
+                    break;
+                }
+                else
+                {
+                    cout << "invalid number ... please choose another space" << endl;
+                }
+            }
+            spaces.clear();
+            vector<int> spacess ={1 , 2 , 3 , 4 , 7};
+            index = tt.choose_space(g ,enemy.name + " please choose a spaces for Dr.Watson " , {1, 2, 3, 4 , 7});
+            r = spacess[index];
+            
+            if(r ==1 || r == 2 || r == 3 || r == 4 || r == 7)
+            {
                 enemy.sidekicks[0].set_location(g.get_space(r));
                 g.set_location("Dr.Watson" , r);
+            
             }
-            else
-            {
-                hero.set_location(g.get_space(25));
-                enemy.hero.set_location(g.get_space(5));
-                g.set_location("Sherlock Holmes" , a);
-                g.set_location("Dracula" , 5);
-                 cout << name << " please choose a spaces for Dr.Watson (14 , 23 , 24 , 26)" << endl;
-                g.get_space(14)->show_space();
-                g.get_space(23)->show_space();
-                g.get_space(24)->show_space();
-                g.get_space(26)->show_space();
-                cin >> r;
-                sidekicks[0].set_location(g.get_space(r));
-                g.set_location("Dr.Watson" , r);
-                cout << enemy.name << " please choose 3 spaces for your sisters (1 , 2 , 3 , 4 , 7)" << endl;
-                g.get_space(1)->show_space();
-                g.get_space(2)->show_space();
-                g.get_space(3)->show_space();
-                g.get_space(4)->show_space();
-                g.get_space(7)->show_space();
-                
-                cin >> r;
-                enemy.sidekicks[0].set_location(g.get_space(r));
-                g.set_location("sister 1" , r);
-                cin >> r;
-                enemy.sidekicks[1].set_location(g.get_space(r));
-                g.set_location("sister 2" , r);
-                cin >> r;
-                enemy.sidekicks[2].set_location(g.get_space(r));
-                g.set_location("sister 3" , r);
-            }
+            spacess.clear();
         }
         else
         {
-           if(enemy.hero.get_name() == "Dracula")
+            hero.set_location(g.get_space(25));
+            enemy.hero.set_location(g.get_space(5));
+            g.set_location("Sherlock Holmes" , 25);
+            g.set_location("Dracula" , 5);
+            vector<int> spaces ={14 , 23 , 24 , 26};
+            int index = tt.choose_space(g ,name + " please choose a spaces for Dr.Watson " , {14 , 23 , 24 , 26});
+            r = spaces[index];
+            if(r ==14 || r == 23 || r == 24 || r == 26)
             {
-                hero.set_location(g.get_space(5));
-                enemy.hero.set_location(g.get_space(25));
-                g.set_location("Dracula" , a);
-                g.set_location("Sherlock Holmes" , 5);
-                cout << enemy.name << "please choose 3 spaces for your sisters (14 , 23 , 24 , 26)" << endl;
-                g.get_space(14)->show_space();
-                g.get_space(23)->show_space();
-                g.get_space(24)->show_space();
-                g.get_space(26)->show_space();
-                cin >> r;
-                enemy.sidekicks[0].set_location(g.get_space(r));
-                g.set_location("sister 1" , r);
-                cin >> r;
-                enemy.sidekicks[1].set_location(g.get_space(r));
-                g.set_location("sister 2" , r);
-                cin >> r;
-                enemy.sidekicks[2].set_location(g.get_space(r));
-                g.set_location("sister 3" , r);
-                 cout << name << " please choose a spaces for Dr.Watson (1 , 2 , 3 , 4 , 7)" << endl;
-                g.get_space(1)->show_space();
-                g.get_space(2)->show_space();
-                g.get_space(3)->show_space();
-                g.get_space(4)->show_space();
-                g.get_space(7)->show_space();
-                cin >> r;
                 sidekicks[0].set_location(g.get_space(r));
                 g.set_location("Dr.Watson" , r);
+            }
+            spaces.clear();
+             vector<int> spacess ={1 , 2 , 3 , 4 , 7};
+            index = tt.choose_space(g ,enemy.name + " please choose 3 spaces for your sisters " , {1 , 2 , 3 , 4 , 7});
+            r = spacess[index];
+           
+            if(r == 1 || r == 2 || r == 3 || r == 4 || r == 7)
+            {
+                enemy.sidekicks[0].set_location(g.get_space(r));
+                g.set_location("sister 1" , r);
+            }
+            while (true)
+            {
+                index = tt.choose_space(g ,enemy.name + " please choose 3 spaces for your sisters " , {1 , 2 , 3 , 4 , 7});
+                s = spacess[index];
+                if((s == 1 || s == 2 || s == 3 || s == 4 || s == 7 ) && s != r)
+                {
+                    enemy.sidekicks[1].set_location(g.get_space(s));
+                    g.set_location("sister 2" , s);
+                    break;
+                }
+                else
+                {
+                    cout << "invalid number ... please choose another space" << endl;
+                }
+            }
+            while (true)
+            {
 
+                index = tt.choose_space(g ,enemy.name + " please choose 3 spaces for your sisters " , {1 , 2 , 3 , 4 , 7});
+                t = spacess[index];
+                if((t == 1 || t == 2 || t == 3 || t == 4 || t == 7) && t != r && t != s)
+                {
+                    enemy.sidekicks[2].set_location(g.get_space(t));
+                    g.set_location("sister 3" , t);
+                    break;
+                }
+                else
+                {
+                    cout << "invalid number ... please choose another space" << endl;
+                }
             }
-            else
-            {
-                hero.set_location(g.get_space(5));
-                enemy.hero.set_location(g.get_space(25));
-                g.set_location("Sherlock Holmes" , a);
-                g.set_location("Dracula" , 5);
-                 cout << enemy.name << " please choose a spaces for Dr.Watson (14 , 23 , 24 , 26)" << endl;
-                g.get_space(14)->show_space();
-                g.get_space(23)->show_space();
-                g.get_space(24)->show_space();
-                g.get_space(26)->show_space();
-                cin >> r;
-                enemy.sidekicks[0].set_location(g.get_space(r));
-                g.set_location("Dr.Watson" , r);
-                cout << name << " please choose 3 spaces for your sisters (1 , 2 , 3 , 4 , 7)" << endl;
-                g.get_space(1)->show_space();
-                g.get_space(2)->show_space();
-                g.get_space(3)->show_space();
-                g.get_space(4)->show_space();
-                g.get_space(7)->show_space();
-                
-                cin >> r;
-                sidekicks[0].set_location(g.get_space(r));
-                g.set_location("sister 1" , r);
-                cin >> r;
-                sidekicks[1].set_location(g.get_space(r));
-                g.set_location("sister 2" , r);
-                cin >> r;
-                sidekicks[2].set_location(g.get_space(r));
-                g.set_location("sister 3" , r);
-                
-            }
+            spacess.clear();
         }
     }
-    else if(a != 5 && a != 25)
-    {
-        cout << "Erorr:";
-        choose_location(enemy , g);
-    }
-   // g.show_map();
 }
 string game::get_age()
 {
@@ -385,6 +311,14 @@ string game::get_name_player()
 }
 bool game::alive()
 {
+    if(hero.get_status())
+    {
+        alivee = true;
+    }
+    else
+    {
+        alivee = false;
+    }
     return alivee;
 }
 void game::creat_deck()
@@ -532,19 +466,40 @@ void game::pick_card(game & enemy)
     }
     
 }
-void game::start_game(game & enemy , map & g)
+void game::start_game(game & enemy , map & g , tui tu)
 {
+    if(enemy.hand.size() > 7)
+    {
+        cout << "You have more than 7 cards ... Please choose card to discard" << endl;
+        for(int i = 1  ; i <= enemy.hand.size() ; i++)
+        {
+            cout << i << ". ";
+            enemy.hand[i - 1].show_card();
+        }
+        int hh; 
+        
+        while (enemy.hand.size() > 7)
+        {
+            cin >> hh;
+            if(hh > enemy.hand.size() || hh < 1)
+            {
+                cout << "Invalid number" << endl;
+            }
+            else
+            {
+                enemy.hand.erase(enemy.hand.begin() + hh - 1);
+            }
+        }
+    }
     cout << hero.get_name() << " turn" << endl;
-    int z;
     while(action > 0)
     {
         b.clear();
-            c.clear();
-            enemy.b.clear();
-            enemy.c.clear();
-        cout << name << " please choose an action" << endl << "1. Manueuver     2. Scheme     3. Attack" << endl;
-        cin >> z;
-        if(z ==1)
+        c.clear();
+        enemy.b.clear();
+        enemy.c.clear();
+        int z = tu.action_menu();        
+        if(z ==0)
         {
             if(deck.size() > 0)
             {
@@ -568,233 +523,136 @@ void game::start_game(game & enemy , map & g)
                     sidekicks[2].set_status();
                 }
             }
-            cout << "Do you want to move your character? (1. yes     2. no)" << endl;
-            int h;
-            
-            while(true)
-            {
-                cin >> h;
-                if(h == 1)
+            int h = tu.yesorno("Do you want to move your character?");
+                if(h == 0)
                 {
-                    cout << "do you want to discard a card and use the boost?(1. yes  2.no)" << endl;
-                    int v;
-                    cin >> v;
-                    if(v == 2)
+                    int v=tu.yesorno("Do you want to discard a card and use the boost?");
+        
+                    if(v == 1)
                     {
                         if(hero.get_name() == "Dracula")
                         {
-                            cout << "choose a caracter to move (1. "  << hero.get_name() << " , 2. " << sidekicks[0].get_name() << " , 3. " << sidekicks[1].get_name() << " , 4. " << sidekicks[2].get_name() << ")" << endl;
-                            int yy;
                             
                             while(true)
                             {
-                                cin >> yy;
-                                if(yy == 1)
+                                int yy = tu.choose_acharacter("Choose a character to move" , { hero.get_name() , sidekicks[0].get_name() , sidekicks[1].get_name() , sidekicks[2].get_name() });
+                            
+                                if(yy == 0)
                                 {
-                                    cout << "how many spaces do you want to move?(1 , 2)" << endl;
-                                    int tt;
-                                    
-                                    while(true)
+                                    int tt = tu.choose_acharacter("How many spaces do you want to move?" , {"1" , "2" });
+                                    while(tt+1 > 0)
                                     {
-                                        cin >> tt;
-                                        if(tt == 1 || tt == 2 )
-                                        {
-                                            while(tt > 0)
-                                            {
-                                                g.move(hero.get_name(), hero.get_location()->get_id(), hero);
-                                                tt--;
-                                            }
-                                            break;
-                                        }
-                                        else
-                                        {
-                                            cout << "please choose(1 , 2)" << endl;
-                                        }
-
+                                        g.move(hero.get_name(), hero.get_location()->get_id(), hero , g);
+                                        tt--;
                                     }
                                     break;
                                     
                                 }
-                                if(yy == 2)
+                                if(yy == 1)
                                 {
                                     if(sidekicks[0].get_status())
                                     {
-                                        cout << "how many spaces do you want to move?(1 , 2)" << endl;
-                                        int tt; 
-                                        while(true)
+                                        
+                                        int tt = tu.choose_acharacter("How many spaces do you want to move?" , {"1" , "2" });
+                                        
+                                        while(tt+1 > 0)
                                         {
-                                            cin >> tt;
-                                            if(tt == 1 || tt == 2 )
-                                            {
-                                                while(tt > 0)
-                                                {
-                                                    g.move(sidekicks[0].get_name(), sidekicks[0].get_location()->get_id(), sidekicks[0]);
-                                                    tt--;
-                                                }
-                                                break;
-                                            }
-                                            else
-                                            {
-                                                cout << "please choose(1 , 2)" << endl;
-                                            }
-
+                                            g.move(sidekicks[0].get_name(), sidekicks[0].get_location()->get_id(), sidekicks[0] , g);
+                                            tt--;
                                         }
+                                            
                                         break;
                                     }
                                     else
                                     {
-                                        cout << "this caracter is dead... please choose another character" << endl;
+                                        cout << "this character is dead... please choose another character" << endl;
                                     }
                                     
+                                    
+                                }
+                                if(yy == 2)
+                                {
+                                    if(sidekicks[1].get_status())
+                                    {
+                                        int tt = tu.choose_acharacter("How many spaces do you want to move?" , {"1" , "2" });;
+                                        while(tt+1 > 0)
+                                        {
+                                            g.move(sidekicks[1].get_name(), sidekicks[1].get_location()->get_id(), sidekicks[1] , g);
+                                            tt--;
+                                        }
+                                        break;
+                                           
+                                    }
+                                    else
+                                    {
+                                        cout << "this character is dead... please choose another character" << endl;
+                                    }
                                     
                                 }
                                 if(yy == 3)
                                 {
                                     if(sidekicks[1].get_status())
                                     {
-                                        cout << "how many spaces do you want to move?(1 , 2)" << endl;
-                                        int tt;
-                                        
-                                        while(true)
+                                        int tt = tu.choose_acharacter("How many spaces do you want to move?" , {"1" , "2" });;
+                                        while(tt+1 > 0)
                                         {
-                                            cin >> tt;
-                                            if(tt == 1 || tt == 2 )
-                                            {
-                                                while(tt > 0)
-                                                {
-                                                    g.move(sidekicks[1].get_name(), sidekicks[1].get_location()->get_id(), sidekicks[1]);
-                                                    tt--;
-                                                }
-                                                break;
-                                            }
-                                            else
-                                            {
-                                                cout << "please choose(1 , 2)" << endl;
-                                            }
-
+                                            g.move(sidekicks[2].get_name(), sidekicks[2].get_location()->get_id(), sidekicks[2] , g);
+                                            tt--;
                                         }
                                         break;
+                                           
                                     }
                                     else
                                     {
-                                        cout << "this caracter is dead... please choose another character" << endl;
+                                        cout << "this character is dead... please choose another character" << endl;
                                     }
-                                    
-                                }
-                                if(yy == 4)
-                                {
-                                    if(sidekicks[2].get_status())
-                                    {
-                                        cout << "how many spaces do you want to move?(1 , 2)" << endl;
-                                        int tt;
-                                        
-                                        while(true)
-                                        {
-                                            cin >> tt;
-                                            if(tt == 1 || tt == 2 )
-                                            {
-                                                while(tt > 0)
-                                                {
-                                                    g.move(sidekicks[2].get_name(), sidekicks[2].get_location()->get_id(), sidekicks[2]);
-                                                    tt--;
-                                                }
-                                                break;
-                                            }
-                                            else
-                                            {
-                                                cout << "please choose(1 , 2)" << endl;
-                                            }
-
-                                        }
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        cout << "this caracter is dead... please choose another character" << endl;
-                                    }
-                                }
-                                if(yy != 1 && yy != 2 && yy != 3 && yy != 4)
-                                {
-                                    cout << "please choose (1 , 2 , 3 , 4)" << endl;
                                 }
                             }
                         }
 
                         if(hero.get_name() == "Sherlock Holmes")
-                    {
-                        cout << "choose a caracter to move (1. "  << hero.get_name() << " , 2. " << sidekicks[0].get_name() << ")" << endl;
-                        int yy;
-                        
-                        while(true)
                         {
-                            cin >> yy;
-                            if(yy == 1)
+                           
+                            while(true)
                             {
-                                cout << "how many spaces do you want to move?(1 , 2)" << endl;
-                                int tt;
+                                int yy = yy = tu.choose_acharacter("Choose a character to move" , { hero.get_name() , sidekicks[0].get_name()});
                                
-                                while(true)
+                                if(yy == 0)
                                 {
-                                    cin >> tt;
-                                    if(tt == 1 || tt == 2 )
+                                     int tt = tu.choose_acharacter("How many spaces do you want to move?" , {"1" , "2" });
+                                    while(tt+1 > 0)
                                     {
-                                        while(tt > 0)
+                                        g.move(hero.get_name(), hero.get_location()->get_id(), hero , g);
+                                        tt--;
+                                    }
+                                    break;
+                                }
+                                if(yy == 1)
+                                {
+                                     if(sidekicks[0].get_status())
+                                    {
+                                        
+                                        int tt = tu.choose_acharacter("How many spaces do you want to move?" , {"1" , "2" });
+                                        
+                                        while(tt+1 > 0)
                                         {
-                                            g.move(hero.get_name(), hero.get_location()->get_id(), hero);
+                                            g.move(sidekicks[0].get_name(), sidekicks[0].get_location()->get_id(), sidekicks[0] , g);
                                             tt--;
                                         }
+                                            
                                         break;
                                     }
                                     else
                                     {
-                                        cout << "please choose(1 , 2)" << endl;
+                                        cout << "this character is dead... please choose another character" << endl;
                                     }
-
+                                
                                 }
-                                break;
-                            }
-                            if(yy == 2)
-                            {
-                                if(sidekicks[0].get_status())
-                                {
-                                    cout << "how many spaces do you want to move?(1 , 2)" << endl;
-                                    int tt;
-                                    
-                                    while(true)
-                                    {
-                                        cin >> tt;
-                                        if(tt == 1 || tt == 2 )
-                                        {
-                                            while(tt > 0)
-                                            {
-                                                g.move(sidekicks[0].get_name(), sidekicks[0].get_location()->get_id(), sidekicks[0]);
-                                                tt--;
-                                            }
-                                            break;
-                                        }
-                                        else
-                                        {
-                                            cout << "please choose(1 , 2)" << endl;
-                                        }
-
-                                    }
-                                    break;
-                                }
-                                else
-                                {
-                                    cout << "this caracter is dead... please choose another character" << endl;
-                                }
-                               
-                            }
-                            if(yy != 1 && yy != 2)
-                            {
-                                cout << "please choose (1 , 2)" << endl;
                             }
                         }
+                    
                     }
-                    break;
-                    }
-                    if(v == 1)
+                    if(v == 0)
                     {
                         int move;
                         cout << "which one do you want to discard?" << endl;
@@ -821,13 +679,12 @@ void game::start_game(game & enemy , map & g)
                         }
                         if(hero.get_name() == "Dracula")
                         {
-                            cout << "choose a caracter to move (1. "  << hero.get_name() << " , 2. " << sidekicks[0].get_name() << " , 3. " << sidekicks[1].get_name() << " , 4. " << sidekicks[2].get_name() << ")" << endl;
-                            
                             
                             while(true)
                             {
-                                cin >> yy;
-                                if(yy == 1)
+                                int yy = tu.choose_acharacter("Choose a character to move" , { hero.get_name() , sidekicks[0].get_name() , sidekicks[1].get_name() , sidekicks[2].get_name() });
+                                
+                                if(yy == 0)
                                 {
                                     cout << "how many spaces do you want to move?(1 - "<< move << ")" << endl;
                                     int tt;
@@ -839,7 +696,7 @@ void game::start_game(game & enemy , map & g)
                                         {
                                             while(tt > 0)
                                             {
-                                                g.move(hero.get_name(), hero.get_location()->get_id(), hero);
+                                                g.move(hero.get_name(), hero.get_location()->get_id(), hero , g);
                                                 tt--;
                                             }
                                             break;
@@ -853,7 +710,7 @@ void game::start_game(game & enemy , map & g)
                                     break;
                                     
                                 }
-                                if(yy == 2)
+                                if(yy == 1)
                                 {
                                     if(sidekicks[0].get_status())
                                     {
@@ -866,7 +723,7 @@ void game::start_game(game & enemy , map & g)
                                             {
                                                 while(tt > 0)
                                                 {
-                                                    g.move(sidekicks[0].get_name(), sidekicks[0].get_location()->get_id(), sidekicks[0]);
+                                                    g.move(sidekicks[0].get_name(), sidekicks[0].get_location()->get_id(), sidekicks[0] , g);
                                                     tt--;
                                                 }
                                                 break;
@@ -886,7 +743,7 @@ void game::start_game(game & enemy , map & g)
                                     
                                     
                                 }
-                                if(yy == 3)
+                                if(yy == 2)
                                 {
                                     if(sidekicks[1].get_status())
                                     {
@@ -900,7 +757,7 @@ void game::start_game(game & enemy , map & g)
                                             {
                                                 while(tt > 0)
                                                 {
-                                                    g.move(sidekicks[1].get_name(), sidekicks[1].get_location()->get_id(), sidekicks[1]);
+                                                    g.move(sidekicks[1].get_name(), sidekicks[1].get_location()->get_id(), sidekicks[1] , g);
                                                     tt--;
                                                 }
                                                 break;
@@ -919,7 +776,7 @@ void game::start_game(game & enemy , map & g)
                                     }
                                     
                                 }
-                                if(yy == 4)
+                                if(yy == 3)
                                 {
                                     if(sidekicks[2].get_status())
                                     {
@@ -933,7 +790,7 @@ void game::start_game(game & enemy , map & g)
                                             {
                                                 while(tt > 0)
                                                 {
-                                                    g.move(sidekicks[2].get_name(), sidekicks[2].get_location()->get_id(), sidekicks[2]);
+                                                    g.move(sidekicks[2].get_name(), sidekicks[2].get_location()->get_id(), sidekicks[2] , g);
                                                     tt--;
                                                 }
                                                 break;
@@ -951,22 +808,18 @@ void game::start_game(game & enemy , map & g)
                                         cout << "this caracter is dead... please choose another character" << endl;
                                     }
                                 }
-                                if(yy != 1 && yy != 2 && yy != 3 && yy != 4)
-                                {
-                                    cout << "please choose (1 , 2 , 3 , 4)" << endl;
-                                }
+                               
                             }
                         }
 
                         if(hero.get_name() == "Sherlock Holmes")
                         {
-                            cout << "choose a caracter to move (1. "  << hero.get_name() << " , 2. " << sidekicks[0].get_name() << ")" << endl;
-                            
-                            
+                           
                             while(true)
                             {
-                                cin >> yy;
-                                if(yy == 1)
+                                int yy = tu.choose_acharacter("Choose a character to move" , { hero.get_name() , sidekicks[0].get_name() });
+                                
+                                if(yy == 0)
                                 {
                                     cout << "how many spaces do you want to move?(1 - "<< move << ")"  << endl;
                                     int tt;
@@ -978,7 +831,7 @@ void game::start_game(game & enemy , map & g)
                                         {
                                             while(tt > 0)
                                             {
-                                                g.move(hero.get_name(), hero.get_location()->get_id(), hero);
+                                                g.move(hero.get_name(), hero.get_location()->get_id(), hero , g);
                                                 tt--;
                                             }
                                             break;
@@ -991,7 +844,7 @@ void game::start_game(game & enemy , map & g)
                                     }
                                     break;
                                 }
-                                if(yy == 2)
+                                if(yy == 1)
                                 {
                                     if(sidekicks[0].get_status())
                                     {
@@ -1005,7 +858,7 @@ void game::start_game(game & enemy , map & g)
                                             {
                                                 while(tt > 0)
                                                 {
-                                                    g.move(sidekicks[0].get_name(), sidekicks[0].get_location()->get_id(), sidekicks[0]);
+                                                    g.move(sidekicks[0].get_name(), sidekicks[0].get_location()->get_id(), sidekicks[0] , g);
                                                     tt--;
                                                 }
                                                 break;
@@ -1024,44 +877,45 @@ void game::start_game(game & enemy , map & g)
                                     }
                                 
                                 }
-                                if(yy != 1 && yy != 2)
-                                {
-                                    cout << "please choose (1 , 2)" << endl;
-                                }
+                                  
                             }
                         }
-                    break;
+                    
                     }
                    
                 }
-                else if(h == 2)
+                else if(h == 1)
                 {
-                    break;
                 }
-                else if(h != 2 && h !=1)
-                {
-                    cout << "please choose (1 or 2)" << endl;
-                }
+             action--;
+            hero.set_status();
+            enemy.hero.get_status();
+            for(auto &s:sidekicks)
+            {
+                s.get_status();
             }
-            
+            for(auto &s:enemy.sidekicks)
+            {
+                s.get_status();
+            }
                     
         }
-        else if(z == 2)
+        else if(z == 1)
         {
-            int q=0;
-            
-            for(card & s:hand)
+            vector<int> index;
+            for(int i = 0 ; i < hand.size() ; i++)
             {
-                q++;
-                if(s.get_type() == cardtype::scheme )
+                if(hand[i].get_type() == cardtype::scheme )
                 {
-                    c.push_back(hand[q - 1]);
+                    c.push_back(hand[i]);
+                    index.push_back(i);
                 }
             }
-            if(q == 0)
+            if(c.empty())
             {
                 cout << "you dont have any scheme card please choose another action" << endl;
-                start_game(enemy , g);
+                start_game(enemy , g , tu);
+                return;
             }
             cout << "Choose a card " << endl ;
             for(int i = 1 ; i <= c.size() ; i++)
@@ -1080,102 +934,92 @@ void game::start_game(game & enemy , map & g)
                 }
                 else
                 {
-                    effects(c[yy-1],enemy , g);
-                    hand.erase(hand.begin() + q - 1);
+                    card_effects(c[yy-1],enemy , g);
+                    hand.erase(hand.begin() + index[yy-1]);
                     break;
                 }
             }
             c.clear();
-            
-        }
-        else if(z == 3)
-        {
-            int q= 0;
-            for(card & s:hand)
+            action--;
+            hero.set_status();
+            enemy.hero.get_status();
+            for(auto &s:sidekicks)
             {
-                q++;
+                s.get_status();
+            }
+            for(auto &s:enemy.sidekicks)
+            {
+                s.get_status();
+            }
+        }
+        else if(z == 2)
+        {
+            for(card  s:hand)
+            {
                 if(s.get_type() == cardtype::attack || s.get_type() == cardtype::versatile)
                 {
-                    c.push_back(hand[q - 1]);
+                    c.push_back(s);
                 }
             }
-            if(q == 0)
+            if(c.empty())
             {
                 cout << "you dont have any attack card please choose another action" << endl;
-                start_game(enemy , g);
+                start_game(enemy , g , tu);
+                return;
             }
-            while (true)
+            try
             {
-                try
-                {
-                    choose_fighter(enemy , g);
-                    break;
-                }
-                catch(const std::invalid_argument & e)
-                {
-                    std::cerr << e.what() << '\n';
-                }
+                choose_fighter(enemy , g);
             }
-            while (true)
+            catch(const std::invalid_argument & e)
             {
-                try
-                {
-                    choose_target(enemy);
-                    break;
-                }
-                catch(const std::invalid_argument & e)
-                {
-                    std::cerr << e.what() << '\n';
-                }
+                std::cerr << e.what() << '\n';
+                cout << "please choose another action ..." << endl;
+                start_game(enemy , g , tu);
+                return;
             }
-            q = 0;
-            int r = 0;
-            if(active_character.get_name() == hero.get_name())
+            choose_target(enemy);
+            if(active_character->get_name() == hero.get_name())
             {
                 for(card & s:c)
                 {
-                    q++;
                     if(s.get_owner() == cardowner::hero || s.get_owner() == cardowner::any)
                     {
-                        r++;
-                        b.push_back(c[q - 1]);
+                        b.push_back(s);
                     }
                 }
             }
             if(hero.get_name() == "Dracula")
             {
-                if(active_character.get_name() == sidekicks[0].get_name() || active_character.get_name() == sidekicks[1].get_name() || active_character.get_name() == sidekicks[2].get_name())
+                if(active_character->get_name() == sidekicks[0].get_name() || active_character->get_name() == sidekicks[1].get_name() || active_character->get_name() == sidekicks[2].get_name())
                 {
                     for(card & s:c)
                     {
-                        q++;
                         if(s.get_owner() == cardowner::sidekick || s.get_owner() == cardowner::any)
                         {
-                            r++;
-                            b.push_back(c[q - 1]);
+                            b.push_back(s);
                         }
                     }
                 }
             }
             if(hero.get_name() == "Sherlock Holmes")
             {
-                if(active_character.get_name() == sidekicks[0].get_name())
+                if(active_character->get_name() == sidekicks[0].get_name())
                 {
                     for(card & s:c)
                     {
-                        q++;
                         if(s.get_owner() == cardowner::sidekick || s.get_owner() == cardowner::any)
                         {
-                            r++;
-                            b.push_back(c[q - 1]);
+                            b.push_back(s);
                         }
                     }
                 }
             }
-            if(r == 0)
+            if(b.empty())
             {
                 cout << "you dont have any attack card for this character... please choose another action or another character" << endl;
-                start_game(enemy , g);
+                start_game(enemy , g , tu);
+                return;
 
             }
             cout << "Choose a card " << endl ;
@@ -1197,75 +1041,63 @@ void game::start_game(game & enemy , map & g)
                 else
                 {
                     int o;
-                    cout << target.get_name() << " do you want to choose a card?(1. yes , 2. no)" << endl;
+                    cout << target->get_name() << " do you want to choose a card?(1. yes , 2. no)" << endl;
                     while(true)
                     {
                         cin >> o;
                         if(o == 1)
                         {
-                            q= 0;
-                            r = 0;
                             for(card & s:enemy.hand)
                             {
-                                q++;
                                 if(s.get_type() == cardtype::defense || s.get_type() == cardtype::versatile)
                                 {
-                                    r++;
-                                    c.push_back(enemy.hand[q - 1]);
+                                    enemy.c.push_back(s);
                                 }
                             }
-                            if(r == 0)
+                            if(enemy.c.empty())
                             {
                                 cout << "you dont have any defense card" << endl;
                                 break;
                             }
-                            q = 0;
-                            r =0;
-                            if(target.get_name() == enemy.hero.get_name())
+                            if(target->get_name() == enemy.hero.get_name())
                             {
                                 for(card & s:enemy.c)
                                 {
-                                    q++;
                                     if(s.get_owner() == cardowner::hero || s.get_owner() == cardowner::any)
                                     {
-                                        r++;
-                                        enemy.b.push_back(enemy.c[q - 1]);
+                                        enemy.b.push_back(s);
                                     }
                                 }
                             }
                             if(enemy.hero.get_name() == "Dracula")
                             {
-                                if(target.get_name() == enemy.sidekicks[0].get_name() || target.get_name() == enemy.sidekicks[1].get_name() || target.get_name() == enemy.sidekicks[2].get_name())
+                                if(target->get_name() == enemy.sidekicks[0].get_name() || target->get_name() == enemy.sidekicks[1].get_name() || target->get_name() == enemy.sidekicks[2].get_name())
                                 {
                                     for(card & s:enemy.c)
                                     {
-                                        q++;
                                         if(s.get_owner() == cardowner::sidekick || s.get_owner() == cardowner::any)
                                         {
-                                            r++;
-                                            enemy.b.push_back(enemy.c[q - 1]);
+                                            enemy.b.push_back(s);
                                         }
                                     }
                                 }
                             }
                             if(enemy.hero.get_name() == "Sherlock Holmes")
                             {
-                                if(target.get_name() == enemy.sidekicks[0].get_name())
+                                if(target->get_name() == enemy.sidekicks[0].get_name())
                                 {
                                     for(card & s:enemy.c)
                                     {
-                                        q++;
                                         if(s.get_owner() == cardowner::sidekick || s.get_owner() == cardowner::any)
                                         {
-                                            r++;
-                                            enemy.b.push_back(enemy.c[q - 1]);
+                                            enemy.b.push_back(s);
                                         }
                                     }
                                 }
                             }
-                            if(r == 0)
+                            if(enemy.b.empty())
                             {
-                                cout << target.get_name() <<" there isn't any defense card for you" << endl;
+                                cout << target->get_name() <<" there isn't any defense card for you" << endl;
                                 break;
                             }
                             else
@@ -1286,13 +1118,19 @@ void game::start_game(game & enemy , map & g)
                                     else
                                     {
                                         m++;
-                                        effects(enemy.b[j - 1] , enemy , g , &b[jj - 1]);
-                                        effects(b[jj-1],enemy , g , &enemy.b[j - 1]);
+                                        attack(enemy , g , b[j - 1] , &b[jj - 1]);
                                         for(auto it = enemy.hand.begin() ; it != enemy.hand.end() ; it++)
                                         {
                                             if(enemy.b[j-1].get_name() == it->get_name())
                                             {
                                                 enemy.hand.erase(it);
+                                            }
+                                        }
+                                        for(auto it = hand.begin() ; it != hand.end() ; it++)
+                                        {
+                                            if(b[jj-1].get_name() == it->get_name())
+                                            {
+                                                hand.erase(it);
                                             }
                                         }
                                         break;
@@ -1310,9 +1148,9 @@ void game::start_game(game & enemy , map & g)
                             cout << "please enter (1 , 2)" << endl;
                         }
                     }
-                    if( m == 0)
+                    if(m == 0)
                     {
-                        effects(b[jj-1],enemy , g );
+                        attack(enemy , g , b[jj - 1]);
                         for(auto it = hand.begin() ; it != hand.end() ; it++)
                         {
                             if(b[jj-1].get_name() == it->get_name())
@@ -1321,26 +1159,117 @@ void game::start_game(game & enemy , map & g)
                             }
                         }
                     }
-                    
-                    
                     break;
                 }
             }
-           
-            
+             action--;
+             hero.set_status();
+            enemy.hero.get_status();
+            for(auto &s:sidekicks)
+            {
+                s.get_status();
+            }
+            for(auto &s:enemy.sidekicks)
+            {
+                s.get_status();
+            }
         }
-        
-        else
+        else if(z == 3)
         {
-            cout << "Erorr:(enter 1 , 2 , 3 , 4)     ";
-            start_game(enemy, g);
+            g.show_map();
         }
-         
-        action--;
+        else if(z == 4)
+        {
+            int d = 0;
+           cout <<"Hero: " << hero.get_name() << endl << "Health: " << hero.get_hp() << endl<< "Hand: " ;
+           for(auto s:hand)
+           {
+                d++;
+           }
+           cout << d << endl << "Deck: ";
+           d = 0;
+           for(auto s:deck)
+           {
+                d++;
+           }
+           cout << d << endl << "Space: " << hero.get_location()->get_id() << endl << endl ;
+           if(hero.get_name() == "Dracula")
+           {
+                if(sidekicks[0].get_status())
+                {
+                        cout << "Sister 1    " << "Health: " << sidekicks[0].get_hp() << " Space: " << sidekicks[0].get_location()->get_id() << endl;
+                }
+                if(sidekicks[1].get_status())
+                {
+                        cout << "Sister 2    " << "Health: " << sidekicks[1].get_hp() << " Space: " << sidekicks[1].get_location()->get_id() << endl;
+                }
+                if(sidekicks[2].get_status())
+                {
+                        cout << "Sister 3    " << "Health: " << sidekicks[2].get_hp() << " Space: " << sidekicks[2].get_location()->get_id() << endl;
+                }
+           }
+           else
+           {
+                if(sidekicks[0].get_status())
+                {
+                    cout << "Dr.Watson    " << "Health: " << sidekicks[0].get_hp() << " Space: " << sidekicks[0].get_location()->get_id() << endl;
+                }
+           }
+           
+        }
+        else if(z == 5)
+        {
+             int d = 0;
+           cout <<"Hero: " << enemy.hero.get_name() << endl << "Health: " << enemy.hero.get_hp() << endl <<"Hand: " ;
+           for(auto s:enemy.hand)
+           {
+                d++;
+           }
+           cout << d << endl << "Deck: ";
+           d = 0;
+           for(auto s:enemy.deck)
+           {
+                d++;
+           }
+           cout << d << endl << "Space: " << hero.get_location()->get_id() << endl << endl ;
+            if(enemy.hero.get_name() == "Dracula")
+            {
+                if(enemy.sidekicks[0].get_status())
+                {
+                        cout << "Sister 1    " << "Health: " << enemy.sidekicks[0].get_hp() << " Space: " << enemy.sidekicks[0].get_location()->get_id() << endl;
+                }
+                if(enemy.sidekicks[1].get_status())
+                {
+                        cout << "Sister 2    " << "Health: " << enemy.sidekicks[1].get_hp() << " Space: " << enemy.sidekicks[1].get_location()->get_id() << endl;
+                }
+                if(enemy.sidekicks[2].get_status())
+                {
+                        cout << "Sister 3    " << "Health: " << enemy.sidekicks[2].get_hp() << " Space: " << enemy.sidekicks[2].get_location()->get_id() << endl;
+                }
+            }
+           else
+           {
+                if(enemy.sidekicks[0].get_status())
+                {
+                    cout << "Dr.Watson    " << "Health: " << enemy.sidekicks[0].get_hp() << " Space: " << enemy.sidekicks[0].get_location()->get_id() << endl;
+                }
+           }
+        }
+        else if(z == 6)
+        {
+            tu.main_menu();
+
+        }
+        alive();
+        enemy.alive();
+        if(!hero.get_status() || !enemy.hero.get_status())
+        {
+            break;
+        }
     }
     action = 2;
 }
-void game::effects(card& ca , game & enemy , map & g , card * eca)
+void game::card_effects(card& ca , game & enemy , map & g , card * eca)
 {
     if(ca.get_name() == "feeding frenzy")
     {
@@ -1348,39 +1277,35 @@ void game::effects(card& ca , game & enemy , map & g , card * eca)
     }
     if(ca.get_name() == "mistform")
     {
-
+        mistform(g);
     }
     if(ca.get_name() == "ambush")
     {
-
+        ambush(ca ,enemy);
     }
     if(ca.get_name() == "baptism of blood")
     {
-
+        baptism_of_blood( g);
     }
     if(ca.get_name() == "beastform")
     {
-
+        beastform(ca);
     }
     if(ca.get_name() == "dash")
     {
-
+        dash(g);
     }
     if(ca.get_name() == "exploit")
     {
-
+        expolit();
     }
     if(ca.get_name() == "look into my eyes")
     {
-
+        look_into_my_eyes( enemy , ca , eca);
     }
     if(ca.get_name() == "pray upon")
     {
-
-    }
-    if(ca.get_name() == "feeding frenzy")
-    {
-
+        prey_upon( g ,enemy);
     }
     if(ca.get_name() == "ravening seduction")
     {
@@ -1388,7 +1313,7 @@ void game::effects(card& ca , game & enemy , map & g , card * eca)
     }
     if(ca.get_name() == "thirst for sustenance")
     {
-
+        thirst_for_sustenance(g);
     }
     if(ca.get_name() == "feint")
     {
@@ -1396,23 +1321,23 @@ void game::effects(card& ca , game & enemy , map & g , card * eca)
     }
     if(ca.get_name() == "administer aid")
     {
-
+        administer_aid( g);
     }
     if(ca.get_name() == "counterpunch")
     {
-
+        counterpunch( g , enemy);
     }
     if(ca.get_name() == "deduce strategy")
     {
-
+        deduce_strategy( ca , eca);
     }
     if(ca.get_name() == "education never ends")
     {
-
+        education_never_ends(enemy);
     }
     if(ca.get_name() == "eliminate the impossible")
     {
-
+        eliminate_the_impossible(enemy);
     }
     if(ca.get_name() == "feint_")
     {
@@ -1420,37 +1345,50 @@ void game::effects(card& ca , game & enemy , map & g , card * eca)
     }
     if(ca.get_name() == "fixed point in a changing age")
     {
-
+        fixed_point_in_a_changing_age(enemy);
     }
     if(ca.get_name() == "master of disguise")
     {
-
+        while (true)
+        {
+            try
+            {
+                master_of_disguise(enemy ,g);
+                break;
+            }
+            catch(const std::exception& e)
+            {
+                std::cerr << e.what() << '\n';
+            }
+            
+        }
     }
     if(ca.get_name() == "the game is afoot")
     {
-
+        the_game_is_afoot(g);
     }
     if(ca.get_name() == "service revolver")
     {
-
+        
     }
     if(ca.get_name() == "study methodes")
     {
-
+        study_methods(enemy);
     }
 }
 void game::feeding_frenzy(card & ca)
 {
+    cout << "               feeding frenzy" << endl;
     int t = 0;
     for(auto &sister: sidekicks)
     {
-        int i = target.get_location()->get_zone().size();
+        int i = target->get_location()->get_zone().size();
         int j = sister.get_location()->get_zone().size();
         for(int z= 0 ; z < i ; z++)
         {
             for(int m = 0 ; m < j ; m++)
             {
-                if(target.get_location()->get_zone()[i] == sister.get_location()->get_zone()[j])
+                if(target->get_location()->get_zone()[i] == sister.get_location()->get_zone()[j])
                 {
                     t+=1;
                 }
@@ -1462,6 +1400,7 @@ void game::feeding_frenzy(card & ca)
 }
 void game::mistform(map & g)
 {
+    cout << "               mistform" << endl;
     while(true)
     {
 
@@ -1479,12 +1418,14 @@ void game::mistform(map & g)
 }
 void game::ambush(card& ca ,game & enemy)
 {
+    cout << "               ambush" << endl;
     int random = rand() % enemy.hand.size();
     ca.set_value(enemy.hand[random].get_boost());
     enemy.hand.erase(enemy.hand.begin() + random);
 }
 void game::baptism_of_blood(map & g)
 {
+    cout << "               baptism of blood" << endl;
     int a;
     int b;
     int c;
@@ -1555,6 +1496,7 @@ void game::baptism_of_blood(map & g)
 }
 void game::beastform(card& ca)
 {
+    cout << "               beastform" << endl;
     int q = 0;
     cout << "choose the cards you want to discard (enter 0 to end)" << endl;
     for(auto &h:hand)
@@ -1567,15 +1509,21 @@ void game::beastform(card& ca)
     int counter = 0;
     for(;qq != 0 ;)
     {
-        counter++;
         cin >> qq;
         if(qq > q || qq < 1)
         {
-            cout << "Error: invalid number" << endl;
-            counter--;
+            if(qq == 0)
+            {
+                break;
+            }
+            else
+            {
+                cout << "Error: invalid number" << endl;
+            }
         }
         else
         {
+            counter++;
             hand.erase(hand.begin() + qq - 1);
         }
     }
@@ -1583,24 +1531,31 @@ void game::beastform(card& ca)
 }
 void game::dash(map & g)
 {
+    cout << "               dash" << endl;
     for(int i = 0 ; i < 3 ; i++)
     {
-        g.move(active_character.get_name() , active_character.get_location()->get_id() , active_character);
+        g.move(active_character->get_name() , active_character->get_location()->get_id() ,* active_character , g);
     }
 }
 void game::expolit()
 {
+    cout << "                expolit" << endl;
     int random;
     random = rand()% deck.size();
     hand.push_back(deck[random]);
     deck.erase(deck.begin() + random);
 }
-void game::look_into_my_eyes(game & enemy , card & ca , card & eca)
+void game::look_into_my_eyes(game & enemy , card & ca , card * eca)
 {
-    ca.set_value(1 + eca.get_boost());
+    cout << "               look into my eyes" << endl;
+    if(eca != nullptr)
+    {
+        ca.set_value(1 + eca->get_boost());
+    }
 }
 void game::prey_upon(map & g , game & enemy)
 {
+    cout << "               prey upon" << endl;
     if(g.pray_upon(hero) == 3)
     {
         enemy.hero.set_hp(enemy.hero.get_hp() -1);
@@ -1619,292 +1574,575 @@ void game::prey_upon(map & g , game & enemy)
         cout << " " << endl;
     }
 }
-
-void game::choose_fighter(game & enemy , map& g)
+void game::administer_aid(map& g)
 {
-    cout << "Choose your active caracter (1. " << hero.get_name() << " 2. " << sidekicks[0].get_name() ;
-    if(hero.get_name() == "Dracula")
+    cout << "                administer aid" << endl;
+    int ch;
+    cout << "where do you want to place Dr.Watson?" << endl;
+    while (true)
     {
-        cout << sidekicks[0].get_name() << " 3. " << sidekicks[1].get_name() << " 4. " << sidekicks[2].get_name() << endl;
-        int y;
-        cin >> y;
-        if(y != 1 && y != 2 && y != 3 && y != 4)
+        try
         {
-            throw invalid_argument("Error: invalid number");
+            ch = hero.get_location()->show_neighbors();
+            break;
         }
-        
-        while (true)
+        catch(const std::invalid_argument& e)
         {
-            if(y == 1)
-            {
-                if(hero.get_status())
-                {
-                    if(g.get_draculaandsisters_neighbors(hero))
-                    {
-                        active_character = hero;
-                        break;
-                    }
-                    else
-                    {
-                        cout << "choose another fighter... or enter 0 to choose another action" << endl;
-                        cin >>  y;
-                    }
-                    
-                }
-                else
-                {
-                    cout << "this caracter is dead... please choose another character or enter 0 to choose another action" << endl;
-                    cin >> y;
-                }
-                if(y == 0)
-                {
-                    start_game(enemy , g);
-                }
-            }
-            if(y == 2)
-            {
-                if(sidekicks[0].get_status())
-                {
-                    if(g.get_draculaandsisters_neighbors(sidekicks[0]))
-                    {
-                        active_character = sidekicks[0];
-                        break;
-                    }
-                    else
-                    {
-                        cout << "choose another fighter... or enter 0 to choose another action" << endl;
-                        cin >> y;
-                    }
-                }
-                else
-                {
-                    cout << "this caracter is dead... please choose another character or enter 0 to choose another action" << endl;
-                    cin >> y;
-                }
-                if(y == 0)
-                {
-                    start_game(enemy , g);
-                }
-            }
-            if(y == 3)
-            {
-                if(sidekicks[1].get_status())
-                {
-                    if(g.get_draculaandsisters_neighbors(sidekicks[1]))
-                    {
-                        active_character = sidekicks[1];
-                        break;
-                    }
-                    else
-                    {
-                        cout << "choose another fighter... or enter 0 to choose another action" << endl;
-                        cin >> y;
-                    }
-                }
-                else
-                {
-                    cout << "this caracter is dead... please choose another character or enter 0 to choose another action" << endl;
-                    cin >> y;
-                }
-                if(y == 0)
-                {
-                    start_game(enemy , g);
-                }
-            }
-            if(y == 4)
-            {
-                if(sidekicks[2].get_status())
-                {
-                    if(g.get_draculaandsisters_neighbors(sidekicks[2]))
-                    {
-                        active_character = sidekicks[2];
-                        break;
-                    }
-                    else
-                    {
-                        cout << "choose another fighter... or enter 0 to choose another action" << endl;
-                        cin >> y;
-                    }
-                    
-                }
-                else
-                {
-                    cout << "this caracter is dead... please choose another character or enter 0 to choose another action" << endl;
-                    cin >> y;
-                }
-                if(y == 0)
-                {
-                    start_game(enemy , g);
-                }
-            }
+            std::cerr << e.what() << '\n';
         }
-        
-        
+    }
+    
+    sidekicks[0].get_location()->set_thisspacef();
+    sidekicks[0].set_location(g.get_space(ch));
+    g.set_location("Dr.Watson" ,ch);
+    hero.set_hp(hero.get_hp() + 1);
+    int random;
+    if(deck.size() > 0)
+    {
+        int random = rand()%deck.size();
+        hand.push_back(deck[random]);
+        deck.erase(deck.begin() + random);
     }
     else
     {
-        cout << sidekicks[0].get_name() <<endl;
-        int y;
-        
-        cin >> y;
-        if(y != 1 && y != 2 )
+        cout << "deck is empty" << endl;
+        hero.set_hp(hero.get_hp() - 2);
+        hero.set_status();
+        sidekicks[0].set_hp(hero.get_hp() - 2);
+        sidekicks[0].set_status();
+        if(hero.get_name() == "Dracula")
         {
-            throw invalid_argument("Error: invalid number");
+            sidekicks[1].set_hp(hero.get_hp() - 2);
+            sidekicks[2].set_hp(hero.get_hp() - 2);
+            sidekicks[1].set_status();
+            sidekicks[2].set_status();
         }
-        
+    }
+}
+void game::counterpunch(map & g , game& enemy)
+{
+    cout << "               counter punch" << endl;
+    int y = 0;
+    vector <character*> enemies = get_neighborenemy(*active_character , enemy);
+    for(character* e : enemies)
+    {
+        e->set_hp(e->get_hp() - 2);
+        y++;
+    }
+    if(y == 0)
+    {
+        cout << "there isnt any enemies next to you ..." << endl;
+    }
+}
+void game::thirst_for_sustenance(map & g)
+{
+    cout << "               thirst for sustenance" << endl;
+    if(damage> 0)
+    {
+        int s;
+        cout << "where do you want to place Dracula?" << endl;
         while (true)
         {
-            if(y == 1)
+            try
             {
-                if(hero.get_status())
-                {
-                    if(g.get_sherlock_neighbors(hero))
-                    {
-                        active_character = hero;
-                        break;
-                    }
-                    else
-                    {
-                        cout << "choose another fighter... or enter 0 to choose another action" << endl;
-                        cin >> y;
-                    }
-                }
-                else
-                {
-                    cout << "this caracter is dead... please choose another character or enter 0 to choose another action" << endl;
-                    cin >> y;
-                }
-                if(y == 0)
-                {
-                    start_game(enemy , g);
-                }
+                s = target->get_location()->show_neighbors();
+                break;
             }
-            if(y == 2)
+            catch(const std::invalid_argument& e)
             {
-                if(sidekicks[0].get_status())
+                std::cerr << e.what() << '\n';
+            }
+        }
+        hero.get_location()->set_thisspacef();
+        hero.set_location(g.get_space(s));
+        g.set_location("Dracula" ,s);
+    }
+}
+
+vector <character*> game::get_neighborenemyzone(character & cha ,game& enemy)
+{
+    vector<character*> ch; 
+    if(cha.get_location()->has_zone(zone::ice))
+    {
+        if(enemy.hero.get_location()->has_zone(zone::ice))
+        {
+            ch.push_back(&enemy.hero);
+        }
+        for(auto &s:enemy.sidekicks)
+        {
+            if(s.get_location()->has_zone(zone::ice))
+            {
+                ch.push_back(&s);
+            }
+        }
+    }
+    if(cha.get_location()->has_zone(zone::blue))
+    {
+        if(enemy.hero.get_location()->has_zone(zone::blue))
+        {
+            ch.push_back(&enemy.hero);
+        }
+        for(auto &s:enemy.sidekicks)
+        {
+            if(s.get_location()->has_zone(zone::blue))
+            {
+                ch.push_back(&s);
+            }
+        }
+    }
+    if(cha.get_location()->has_zone(zone::broun))
+    {
+        if(enemy.hero.get_location()->has_zone(zone::broun))
+        {
+            ch.push_back(&enemy.hero);
+        }
+        for(auto &s:enemy.sidekicks)
+        {
+            if(s.get_location()->has_zone(zone::broun))
+            {
+                ch.push_back(&s);
+            }
+        }
+    }
+    if(cha.get_location()->has_zone(zone::gray))
+    {
+        if(enemy.hero.get_location()->has_zone(zone::gray))
+        {
+            ch.push_back(&enemy.hero);
+        }
+        for(auto &s:enemy.sidekicks)
+        {
+            if(s.get_location()->has_zone(zone::gray))
+            {
+                ch.push_back(&s);
+            }
+        }
+    }
+    if(cha.get_location()->has_zone(zone::green))
+    {
+        if(enemy.hero.get_location()->has_zone(zone::green))
+        {
+            ch.push_back(&enemy.hero);
+        }
+        for(auto &s:enemy.sidekicks)
+        {
+            if(s.get_location()->has_zone(zone::green))
+            {
+                ch.push_back(&s);
+            }
+        }
+    }
+    if(cha.get_location()->has_zone(zone::purple))
+    {
+        if(enemy.hero.get_location()->has_zone(zone::purple))
+        {
+            ch.push_back(&enemy.hero);
+        }
+        for(auto &s:enemy.sidekicks)
+        {
+            if(s.get_location()->has_zone(zone::purple))
+            {
+                ch.push_back(&s);
+            }
+        }
+    }
+    if(cha.get_location()->has_zone(zone::white))
+    {
+        if(enemy.hero.get_location()->has_zone(zone::white))
+        {
+            ch.push_back(&enemy.hero);
+        }
+        for(auto &s:enemy.sidekicks)
+        {
+            if(s.get_location()->has_zone(zone::white))
+            {
+                ch.push_back(&s);
+            }
+        }
+    }
+    return ch;
+}
+void game::education_never_ends(game & enemy)
+{
+    cout << "                education never ends" << endl;
+    if(damage > 0)
+    {
+        if(enemy.deck.size() > 0)
+        {
+            int random = rand()%enemy.deck.size();
+            enemy.hand.push_back(enemy.deck[random]);
+            enemy.deck.erase(enemy.deck.begin() + random);
+        }
+        else
+        {
+            cout << "deck is empty" << endl;
+            enemy.hero.set_hp(enemy.hero.get_hp() - 2);
+            enemy.hero.set_status();
+            enemy.sidekicks[0].set_hp(enemy.hero.get_hp() - 2);
+            enemy.sidekicks[0].set_status();
+            if(enemy.hero.get_name() == "Dracula")
+            {
+                enemy.sidekicks[1].set_hp(hero.get_hp() - 2);
+                enemy.sidekicks[2].set_hp(hero.get_hp() - 2);
+                enemy.sidekicks[1].set_status();
+                enemy.sidekicks[2].set_status();
+            }
+        }
+    }
+    else
+    {
+        for(int i = 0 ; i < 2 ; i++)
+        {
+            if(damage > 0)
+            {
+                if(enemy.deck.size() > 0)
                 {
-                    
-                    active_character = sidekicks[0];
-                    break;
-                        
+                    int random = rand()%enemy.deck.size();
+                    enemy.hand.push_back(enemy.deck[random]);
+                    enemy.deck.erase(enemy.deck.begin() + random);
                 }
                 else
                 {
-                    cout << "this caracter is dead... please choose another character or enter 0 to choose another action" << endl;
-                    cin >> y;
-                }
-                if(y == 0)
-                {
-                    start_game(enemy , g);
+                    cout << "deck is empty" << endl;
+                    enemy.hero.set_hp(enemy.hero.get_hp() - 2);
+                    enemy.hero.set_status();
+                    enemy.sidekicks[0].set_hp(enemy.hero.get_hp() - 2);
+                    enemy.sidekicks[0].set_status();
+                    if(enemy.hero.get_name() == "Dracula")
+                    {
+                        enemy.sidekicks[1].set_hp(hero.get_hp() - 2);
+                        enemy.sidekicks[2].set_hp(hero.get_hp() - 2);
+                        enemy.sidekicks[1].set_status();
+                        enemy.sidekicks[2].set_status();
+                    }
                 }
             }
         }
     }
+}
+void game::eliminate_the_impossible(game& enemy)
+{
+    cout << "               eliminate the impossible" << endl;
+    int choice;
+    cout << "choose a card you want to discard" << endl;
+    for(int i = 1 ; i <= enemy.hand.size() ; i++)
+    {
+        cout << i << ". ";
+        enemy.hand[i-1].show_card();
+    }
+    while(true)
+    {
+        cin >> choice;
+        if(choice > enemy.hand.size() || choice <= 0)
+        {
+            cout << "invalid number" << endl;
+        }
+        else
+        {
+            enemy.hand.erase(enemy.hand.begin() + choice - 1);
+            break;
+        }
+    }
+} 
+void game::fixed_point_in_a_changing_age(game& enemy)
+{
+    cout << "               fixed point in a changing age" << endl;
+    for(auto &s:active_character->get_location()->get_neighbors())
+    {
+        if(s == hero.get_location())
+        {
+            active_character->set_hp(active_character->get_hp() + 1);
+            hero.set_hp(hero.get_hp() + 1);
+        }
+    }
+}
+void game::deduce_strategy(card& ca , card* eca)
+{
+    cout << "               deduce strategy" << endl;
+    if(eca != nullptr)
+    {
+        eca->set_value(eca->get_boost());
+    }
+}
+
+void game::master_of_disguise(game & enemy , map & g)
+{
+    cout << "               master of disguise" << endl;
+    cout << "who is your target?" << endl << "1. Dracula  2. sister1  3. sister2  4. sister3" << endl;
+    
+    int yy;
+    
+    while (true)
+    {
+        cin >> yy;
+        if(yy == 1)
+        {
+            if(enemy.hero.get_status())
+            {
+                target = &enemy.hero;
+                break;
+            }
+            else
+            {
+                cout << "this character is dead... please choose another character" << endl;
+            }
+        }
+        else if(yy == 2 || yy == 3 || yy == 4)
+        {
+            if(enemy.sidekicks[yy-2].get_status())
+            {
+                target = &enemy.sidekicks[yy-2];
+                break;
+            }
+            else
+            {
+                cout << "this character is dead... please choose another character" << endl;
+            }
+        }
+        else
+        {
+            throw invalid_argument("Error: invalid number");
+        }
+    }
+    space* z = hero.get_location();
+    hero.get_location()->set_thisspacef();
+    hero.set_location(target->get_location());
+    g.set_location(hero.get_name() , hero.get_location()->get_id());
+    target->get_location()->set_thisspacef();
+    target->set_location(z);
+    g.set_location(target->get_name() , target->get_location()->get_id());
+    target->set_hp(target->get_hp() - 1);
+}
+void game::the_game_is_afoot(map &g)
+{
+    cout << "                the game is afoot" << endl;
+    for(int i = 0 ; i < 3 ; i++)
+    {
+        g.move(hero.get_name(), hero.get_location()->get_id(), hero , g);
+    }
+}
+void game::study_methods(game & enemy)
+{
+    cout << "               study methods" << endl;
+    if(damage > 0)
+    {
+        cout << "your enemy hand ..." << endl;
+        for(int i = 1 ; i <= enemy.hand.size() ; i++)
+        {
+            cout << i << ". ";
+            enemy.hand[i-1].show_card();
+        }
+    }
+}
+vector <character*> game::get_neighborenemy(character& cha , game& enemy)
+{
+    vector<character*> neighborenemy;
+    if(enemy.hero.get_status())
+    {
+        for(space* neighbor:cha.get_location()->get_neighbors())
+        {
+            if(enemy.hero.get_location() == neighbor)
+            {
+                neighborenemy.push_back(&enemy.hero);
+            }
+        }
+    }
+    for(character& sidekick: enemy.sidekicks)
+    {
+        if(sidekick.get_status())
+        {
+            for(space* neighbor:cha.get_location()->get_neighbors())
+            {
+                if(sidekick.get_location() == neighbor)
+                {
+                    neighborenemy.push_back(&sidekick);
+                }
+            }
+        }
+    }
+    return neighborenemy;
+}
+void game::attack(game & enemy , map & g , card& ca , card* eca)
+{
+    if(eca == nullptr)
+    {
+        if(ca.get_time() == timing::beforcombat)
+        {
+            card_effects(ca , enemy , g);
+        }
+        else if(ca.get_time() == timing::duringccombat)
+        {
+            card_effects(ca , enemy , g);
+        }
+        target->set_hp(target->get_hp() - ca.get_value());
+        damage= ca.get_value();
+        if(ca.get_time() == timing::aftercombat)
+        {
+            card_effects(ca , enemy , g);
+        }
+    }
+    else
+    {
+        if(ca.get_time() == timing::beforcombat)
+        {
+            card_effects(ca , enemy , g , eca);
+        }
+        if(eca->get_time() == timing::beforcombat)
+        {
+            card_effects(ca , enemy , g , eca);
+        }
+        if(ca.get_time() == timing::duringccombat)
+        {
+            card_effects(ca , enemy , g , eca);
+        }
+        if(eca->get_time() == timing::duringccombat)
+        {
+            card_effects(ca , enemy , g , eca);
+        }
+        damage = eca->get_value() - ca.get_value();
+        if(damage < 0)
+        {
+            damage = 0;
+        }
+        target->set_hp(target->get_hp() - damage);
+        if(ca.get_time() == timing::aftercombat)
+        {
+            card_effects(ca , enemy , g , eca);
+        }
+        if(eca->get_time() == timing::aftercombat)
+        {
+            card_effects(ca , enemy , g , eca);
+        }
+    }
+    cout <<"damage: " << damage << endl;
+}
+void game::choose_fighter(game & enemy , map& g)
+{
+
+    vector<character*> available_characters;
+
+    if(hero.get_status())
+    {
+        if(!get_neighborenemy(hero, enemy).empty())
+        {
+            available_characters.push_back(&hero);
+        }
+    }
+    bool canattack = false;
+    for(character &c : sidekicks)
+    {
+        if(c.get_status())
+        {
+            
+
+            if(c.get_attack_type() == "melee")
+            {
+                canattack = !get_neighborenemy(c, enemy).empty();
+            }
+            else
+            {
+                canattack = !get_neighborenemy(c, enemy).empty() || !get_neighborenemyzone(c, enemy).empty();
+            }
+
+            if(canattack)
+                available_characters.push_back(&c);
+        }    
+
+       
+    }
+    int choice;
+    if(available_characters.empty())
+    {
+        throw invalid_argument("No fighter can attack");
+    }
+    else
+    {
+        cout << "Choose your active character" << endl;
+
+        for(int i = 1 ; i <= available_characters.size() ; i++)
+        {
+            cout << i << ". " << available_characters[i-1]->get_name() << endl;
+        }
+        while(true)
+        {
+            cin >> choice;
+            if(choice <= 0 || choice > available_characters.size())
+            {
+
+            }
+            else
+            {
+                active_character = available_characters[choice - 1];
+                break;
+            }
+        }
+
+    }    
 }   
 void game::choose_target(game & enemy)
 {
-    cout << "Choose your target (1. " << enemy.hero.get_name() << " 2. ";
-    if(enemy.hero.get_name() == "Dracula")
+    cout << "choose your target" << endl;
+    if(active_character->get_attack_type() != "melee")
     {
-        cout << enemy.sidekicks[0].get_name() << " 3. " << enemy.sidekicks[1].get_name() << " 4. " << enemy.sidekicks[2].get_name() << endl;
-        int yy;
-        cin >> yy;
-        if(yy != 1 && yy != 2 && yy != 3 && yy != 4)
+        vector <character*> enemies = get_neighborenemy(*active_character , enemy);
+        int i = 1;
+        for(; i <= enemies.size() ; i++)
         {
-            throw invalid_argument("Error: invalid number");
+            cout << i << ". " << enemies[i-1]->get_name() << endl;
         }
-        while (true)
+        int choice;
+        while(true)
         {
-            if(yy == 1)
+            cin >> choice;
+
+            if(choice <= i && choice >=1 )
             {
-                if(enemy.hero.get_status())
+                if(enemies[choice - 1]->get_status())
                 {
-                    target = enemy.hero;
+                    target = enemies[choice-1];
                     break;
                 }
                 else
                 {
-                    cout << "this caracter is dead... please choose another character" << endl;
-                    cin >> yy;
+                    cout << "this character is dead... please choose another character" << endl;
+                    
                 }
             }
-            if(yy == 2)
+            else
             {
-                if(enemy.sidekicks[0].get_status())
-                {
-                    target = enemy.sidekicks[0];
-                    break;
-                }
-                else
-                {
-                    cout << "this caracter is dead... please choose another character" << endl;
-                    cin >> yy;
-                }
-            }
-            if(yy == 3)
-            {
-                if(enemy.sidekicks[1].get_status())
-                {
-                    target = enemy.sidekicks[1];
-                    break;
-                }
-                else
-                {
-                    cout << "this caracter is dead... please choose another character" << endl;
-                    cin >> yy;
-                }
-            }
-            if(yy == 4)
-            {
-                if(enemy.sidekicks[2].get_status())
-                {
-                    target = enemy.sidekicks[2];
-                    break;
-                }
-                else
-                {
-                    cout << "this caracter is dead... please choose another character" << endl;
-                    cin >> yy;
-                }
+                cout << "invalid number... please choose (1 - " << i << ")" << endl;
             }
         }
     }
     else
     {
-        cout << enemy.sidekicks[0].get_name() <<endl;
-        int yy;
-        cin >> yy;
-        if(yy != 1 && yy != 2 )
+        vector <character*> enemies = get_neighborenemyzone(*active_character , enemy);
+        int i = 1;
+        for(; i <= enemies.size() ; i++)
         {
-            throw invalid_argument("Error: invalid number");
-        } 
-        while (true)
+            cout << i << ". " << enemies[i-1]->get_name() << endl;
+        }
+        int choice;
+        while(true)
         {
-            if(yy == 1)
+            cin >> choice;
+
+            if(choice <= enemies.size() && choice >=1 )
             {
-                if(enemy.hero.get_status())
+                if(enemies[choice - 1]->get_status())
                 {
-                    target = enemy.hero;
+                    target = enemies[choice-1];
                     break;
                 }
                 else
                 {
-                    cout << "this caracter is dead... please choose another character" << endl;
-                    cin >> yy;
+                    cout << "this character is dead... please choose another character" << endl;
+                    
                 }
             }
-            if(yy == 2)
+            else
             {
-                if(enemy.sidekicks[0].get_status())
-                {
-                    target = enemy.sidekicks[0];
-                    break;
-                }
-                else
-                {
-                    cout << "this caracter is dead... please choose another character" << endl;
-                    cin >> yy;
-                }
+                cout << "invalid number... please choose (1 - " << enemies.size() << ")" << endl;
             }
         }
     }

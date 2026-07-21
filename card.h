@@ -43,5 +43,7 @@ class card
         void set_boost(int);
         void set_value(int);
         void show_card();
+        timing get_time();
+        int get_value();
 };
 #endif

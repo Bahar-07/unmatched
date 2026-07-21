@@ -92,3 +92,11 @@ void card::set_boost(int boost)
 {
     this->boost = boost;
 }
+timing card::get_time()
+{
+    return time;
+}
+int card::get_value()
+{
+    return value;
+}

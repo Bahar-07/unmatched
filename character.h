@@ -13,9 +13,10 @@ class character
         space * location;
         int move;
         bool status;
+        std::string attack_type;
     public:
         character();
-        character(std::string ,int , int);
+        character(std::string ,int , int  , std::string);
         std::string get_name();
         int get_hp();
         void set_hp(int);
@@ -24,5 +25,6 @@ class character
         void set_location(space*);
         int get_move();
         void set_status();
+        std::string get_attack_type();
 };
 #endif

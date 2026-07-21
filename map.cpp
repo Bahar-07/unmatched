@@ -37,6 +37,7 @@ map::map()
    spaces.push_back(space(31 , {zone::broun} , false));
    spaces.push_back(space(32 , {zone::broun} , false));
     neighborr();
+    secret_pass();
 }
 space * map::get_space(int id)
 {
@@ -144,6 +145,21 @@ void map::neighborr()
     get_space(32)->add_neighbor(get_space(30));
     get_space(32)->add_neighbor(get_space(31));
 }
+void map::secret_pass()
+{
+    get_space(1)->add_secret_passage(get_space(16));
+    get_space(1)->add_secret_passage(get_space(12));
+    get_space(1)->add_secret_passage(get_space(29));
+    get_space(12)->add_secret_passage(get_space(1));
+    get_space(12)->add_secret_passage(get_space(16));
+    get_space(12)->add_secret_passage(get_space(29));
+    get_space(16)->add_secret_passage(get_space(29));
+    get_space(16)->add_secret_passage(get_space(1));
+    get_space(16)->add_secret_passage(get_space(12));
+    get_space(29)->add_secret_passage(get_space(12));
+    get_space(29)->add_secret_passage(get_space(16));
+    get_space(29)->add_secret_passage(get_space(1));
+}
 void map::show_map()
 {
     for(space s: spaces)
@@ -161,41 +177,46 @@ void map::set_location(std::string b , int a)
         }
     }
 }
-int map::move(std::string c ,int l , character& character)
+void map::move(std::string c ,int l , character& character , map & g)
 {
+    g.show_map();
     int ch;
-    std::cout << "where do you whant to go?" << std::endl ;
+    std::cout << "where do you want to go?" << std::endl ;
     for(space &s:spaces)
     {
         if(s.get_id() == l)
         {
-            s.show_neighbors();
-            if(s.get_secret())
-            {
-                if(l == 1)
+           while (true)
+           {
+                try
                 {
-                    std::cout << "12" << std::endl << "29" << std::endl << "16" << std::endl;
+                    ch = s.show_neighbors_for_move();
+                    break;
                 }
-                if(l == 12)
+                catch(const std::exception& e)
                 {
-                    std::cout << "1" << std::endl << "29" << std::endl << "16" << std::endl;
+                    std::cerr << e.what() << '\n';
                 }
-                if(l == 29)
-                {
-                    std::cout << "1" << std::endl << "12" << std::endl << "16" << std::endl;
-                }
-                if(l == 16)
-                {
-                    std::cout << "12" << std::endl << "29" << std::endl << "1" << std::endl;
-                }
-            }
-            s.set_thisspacef();
+           }
+           if(ch == 400)
+           {
+                break;
+                return;
+           }
+           else
+           {
+                s.set_thisspacef();
+                break;
+           }
+            
         }
     }
-    std::cin >> ch;
+    if(ch == 400)
+    {
+        return;
+    }
     character.set_location(get_space(ch));
     set_location(c ,ch);
-    return ch;
 }
 void map::move2(character&h)
 {
@@ -214,7 +235,8 @@ void map::move2(character&h)
             {
                 if(s.get_thisspace() == "e")
                 {
-                    h.set_location(get_space(a));
+                    h.set_location(&s);
+                    s.set_thisspacef();
                     set_location("Dracula" ,a);
                 }
                 else
@@ -229,7 +251,6 @@ void map::move2(character&h)
 }
 void map::move3(character & h , character & si , map& g)
 {
-
     int a;
     std::cout << "where do you want to go? (1  32 (pay attention to the zone color))" << std::endl;
     std::cin >> a;
@@ -275,65 +296,6 @@ void map::move3(character & h , character & si , map& g)
                         move3(h , si , g);
                     }
                 }
-            }
-        }
-    }
-}
-bool map::neighbor_status(character& h)
-{
-    for(space &s:spaces)
-    {
-        if(s.get_id() == h.get_location()->get_id())
-        {
-            std::cout << "your neighbors are:" << std::endl;
-            if(s.show_full_neighbors())
-            {
-                return true;
-            }
-            else
-            {
-                std::cout << "dont have any neighbors..." << std::endl;
-                return false;
-            }
-        }
-    }
-}
-bool map::get_draculaandsisters_neighbors(character & h)
-{
-    for(space &s:spaces)
-    {
-        if(s.get_id() == h.get_location()->get_id())
-        {
-            
-            std::cout << "your neighbors are:" << std::endl;
-            if(s.get_dracula_neighbors())
-            {
-                return true;
-            }
-            else
-            {
-                std::cout << "dont have any neighbors..." << std::endl;
-                return false;
-            }
-        }
-    }
-}
-bool map::get_sherlock_neighbors(character & h)
-{
-    for(space &s:spaces)
-    {
-        if(s.get_id() == h.get_location()->get_id())
-        {
-            
-            std::cout << "your neighbors are:" << std::endl;
-            if(s.get_sherlock_neighbors())
-            {
-                return true;
-            }
-            else
-            {
-                std::cout << "dont have any neighbors..." << std::endl;
-                return false;
             }
         }
     }
