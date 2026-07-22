@@ -591,7 +591,7 @@ void game::start_game(game & enemy , map & g , tui tu)
                                 }
                                 if(yy == 3)
                                 {
-                                    if(sidekicks[1].get_status())
+                                    if(sidekicks[2].get_status())
                                     {
                                         int tt = tu.choose_acharacter("How many spaces do you want to move?" , {"1" , "2" });;
                                         while(tt+1 > 0)
@@ -738,7 +738,7 @@ void game::start_game(game & enemy , map & g , tui tu)
                                     }
                                     else
                                     {
-                                        cout << "this caracter is dead... please choose another character" << endl;
+                                        cout << "this character is dead... please choose another character" << endl;
                                     }
                                     
                                     
@@ -772,7 +772,7 @@ void game::start_game(game & enemy , map & g , tui tu)
                                     }
                                     else
                                     {
-                                        cout << "this caracter is dead... please choose another character" << endl;
+                                        cout << "this character is dead... please choose another character" << endl;
                                     }
                                     
                                 }
@@ -805,7 +805,7 @@ void game::start_game(game & enemy , map & g , tui tu)
                                     }
                                     else
                                     {
-                                        cout << "this caracter is dead... please choose another character" << endl;
+                                        cout << "this character is dead... please choose another character" << endl;
                                     }
                                 }
                                
@@ -889,14 +889,14 @@ void game::start_game(game & enemy , map & g , tui tu)
                 }
              action--;
             hero.set_status();
-            enemy.hero.get_status();
+            enemy.hero.set_status();
             for(auto &s:sidekicks)
             {
-                s.get_status();
+                s.set_status();
             }
             for(auto &s:enemy.sidekicks)
             {
-                s.get_status();
+                s.set_status();
             }
                     
         }
@@ -934,7 +934,7 @@ void game::start_game(game & enemy , map & g , tui tu)
                 }
                 else
                 {
-                    card_effects(c[yy-1],enemy , g);
+                    card_effects(&c[yy-1],enemy , g);
                     hand.erase(hand.begin() + index[yy-1]);
                     break;
                 }
@@ -1118,19 +1118,21 @@ void game::start_game(game & enemy , map & g , tui tu)
                                     else
                                     {
                                         m++;
-                                        attack(enemy , g , b[j - 1] , &b[jj - 1]);
-                                        for(auto it = enemy.hand.begin() ; it != enemy.hand.end() ; it++)
+                                        attack(enemy , g , &enemy.b[j - 1] , &b[jj - 1]);
+                                        for(auto i = enemy.hand.begin() ; i != enemy.hand.end() ; i++)
                                         {
-                                            if(enemy.b[j-1].get_name() == it->get_name())
+                                            if(enemy.b[j-1].get_name() == i->get_name())
                                             {
-                                                enemy.hand.erase(it);
+                                                enemy.hand.erase(i);
+                                                break;
                                             }
                                         }
-                                        for(auto it = hand.begin() ; it != hand.end() ; it++)
+                                        for(auto i = hand.begin() ; i != hand.end() ; i++)
                                         {
-                                            if(b[jj-1].get_name() == it->get_name())
+                                            if(b[jj-1].get_name() == i->get_name())
                                             {
-                                                hand.erase(it);
+                                                hand.erase(i);
+                                                break;
                                             }
                                         }
                                         break;
@@ -1150,12 +1152,13 @@ void game::start_game(game & enemy , map & g , tui tu)
                     }
                     if(m == 0)
                     {
-                        attack(enemy , g , b[jj - 1]);
-                        for(auto it = hand.begin() ; it != hand.end() ; it++)
+                        attack(enemy , g , &b[jj - 1]);
+                        for(auto i = hand.begin() ; i != hand.end() ; i++)
                         {
-                            if(b[jj-1].get_name() == it->get_name())
+                            if(b[jj-1].get_name() == i->get_name())
                             {
-                                hand.erase(it);
+                                hand.erase(i);
+                                break;
                             }
                         }
                     }
@@ -1316,85 +1319,85 @@ void game::start_game(game & enemy , map & g , tui tu)
     }
     action = 2;
 }
-void game::card_effects(card& ca , game & enemy , map & g , card * eca)
+void game::card_effects(card * ca , game & enemy , map & g , card * eca)
 {
-    if(ca.get_name() == "feeding frenzy")
+    if(ca->get_name() == "feeding frenzy")
     {
-        feeding_frenzy(ca);
+        feeding_frenzy(*ca);
     }
-    if(ca.get_name() == "mistform")
+    if(ca->get_name() == "mistform")
     {
         mistform(g);
     }
-    if(ca.get_name() == "ambush")
+    if(ca->get_name() == "ambush")
     {
-        ambush(ca ,enemy);
+        ambush(*ca ,enemy);
     }
-    if(ca.get_name() == "baptism of blood")
+    if(ca->get_name() == "baptism of blood")
     {
         baptism_of_blood( g);
     }
-    if(ca.get_name() == "beastform")
+    if(ca->get_name() == "beastform")
     {
-        beastform(ca);
+        beastform(*ca);
     }
-    if(ca.get_name() == "dash")
+    if(ca->get_name() == "dash")
     {
         dash(g);
     }
-    if(ca.get_name() == "exploit")
+    if(ca->get_name() == "exploit")
     {
         expolit();
     }
-    if(ca.get_name() == "look into my eyes")
+    if(ca->get_name() == "look into my eyes")
     {
-        look_into_my_eyes( enemy , ca , eca);
+        look_into_my_eyes( enemy , *ca , eca);
     }
-    if(ca.get_name() == "pray upon")
+    if(ca->get_name() == "pray upon")
     {
         prey_upon( g ,enemy);
     }
-    if(ca.get_name() == "ravening seduction")
+    if(ca->get_name() == "ravening seduction")
     {
 
     }
-    if(ca.get_name() == "thirst for sustenance")
+    if(ca->get_name() == "thirst for sustenance")
     {
         thirst_for_sustenance(g);
     }
-    if(ca.get_name() == "feint")
+    if(ca->get_name() == "feint")
     {
 
     }
-    if(ca.get_name() == "administer aid")
+    if(ca->get_name() == "administer aid")
     {
         administer_aid( g);
     }
-    if(ca.get_name() == "counterpunch")
+    if(ca->get_name() == "counterpunch")
     {
         counterpunch( g , enemy);
     }
-    if(ca.get_name() == "deduce strategy")
+    if(ca->get_name() == "deduce strategy")
     {
-        deduce_strategy( ca , eca);
+        deduce_strategy( *ca , eca);
     }
-    if(ca.get_name() == "education never ends")
+    if(ca->get_name() == "education never ends")
     {
         education_never_ends(enemy);
     }
-    if(ca.get_name() == "eliminate the impossible")
+    if(ca->get_name() == "eliminate the impossible")
     {
         eliminate_the_impossible(enemy);
     }
-    if(ca.get_name() == "feint_")
+    if(ca->get_name() == "feint_")
     {
 
     }
-    if(ca.get_name() == "fixed point in a changing age")
+    if(ca->get_name() == "fixed point in a changing age")
     {
         fixed_point_in_a_changing_age(enemy);
     }
-    if(ca.get_name() == "master of disguise")
+    if(ca->get_name() == "master of disguise")
     {
         while (true)
         {
@@ -1410,15 +1413,15 @@ void game::card_effects(card& ca , game & enemy , map & g , card * eca)
             
         }
     }
-    if(ca.get_name() == "the game is afoot")
+    if(ca->get_name() == "the game is afoot")
     {
         the_game_is_afoot(g);
     }
-    if(ca.get_name() == "service revolver")
+    if(ca->get_name() == "service revolver")
     {
         
     }
-    if(ca.get_name() == "study methodes")
+    if(ca->get_name() == "study methodes")
     {
         study_methods(enemy);
     }
@@ -1974,15 +1977,31 @@ void game::the_game_is_afoot(map &g)
 void game::study_methods(game & enemy)
 {
     cout << "               study methods" << endl;
-    if(damage > 0)
+    if(hero.get_name() == "Sherlock Holmes")
     {
-        cout << "your enemy hand ..." << endl;
-        for(int i = 1 ; i <= enemy.hand.size() ; i++)
+        if(damage > 0)
         {
-            cout << i << ". ";
-            enemy.hand[i-1].show_card();
+            cout << "your enemy hand ..." << endl;
+            for(int i = 1 ; i <= enemy.hand.size() ; i++)
+            {
+                cout << i << ". ";
+                enemy.hand[i-1].show_card();
+            }
         }
     }
+    else
+    {
+        if(damage == 0)
+        {
+            cout << "your enemy hand ..." << endl;
+            for(int i = 1 ; i <= enemy.hand.size() ; i++)
+            {
+                cout << i << ". ";
+                enemy.hand[i-1].show_card();
+            }
+        }
+    }
+    
 }
 vector <character*> game::get_neighborenemy(character& cha , game& enemy)
 {
@@ -2012,56 +2031,56 @@ vector <character*> game::get_neighborenemy(character& cha , game& enemy)
     }
     return neighborenemy;
 }
-void game::attack(game & enemy , map & g , card& ca , card* eca)
+void game::attack(game & enemy , map & g , card* ca , card* eca)
 {
     if(eca == nullptr)
     {
-        if(ca.get_time() == timing::beforcombat)
+        if(ca->get_time() == timing::beforcombat)
         {
             card_effects(ca , enemy , g);
         }
-        else if(ca.get_time() == timing::duringccombat)
+        else if(ca->get_time() == timing::duringccombat)
         {
             card_effects(ca , enemy , g);
         }
-        target->set_hp(target->get_hp() - ca.get_value());
-        damage= ca.get_value();
-        if(ca.get_time() == timing::aftercombat)
+        target->set_hp(target->get_hp() - ca->get_value());
+        damage= ca->get_value();
+        if(ca->get_time() == timing::aftercombat)
         {
             card_effects(ca , enemy , g);
         }
     }
     else
     {
-        if(ca.get_time() == timing::beforcombat)
+        if(ca->get_time() == timing::beforcombat)
         {
             card_effects(ca , enemy , g , eca);
         }
         if(eca->get_time() == timing::beforcombat)
         {
-            card_effects(ca , enemy , g , eca);
+            card_effects(eca , enemy , g , ca);
         }
-        if(ca.get_time() == timing::duringccombat)
+        if(ca->get_time() == timing::duringccombat)
         {
             card_effects(ca , enemy , g , eca);
         }
         if(eca->get_time() == timing::duringccombat)
         {
-            card_effects(ca , enemy , g , eca);
+            card_effects(eca , enemy , g , ca);
         }
-        damage = eca->get_value() - ca.get_value();
+        damage = eca->get_value() - ca->get_value();
         if(damage < 0)
         {
             damage = 0;
         }
         target->set_hp(target->get_hp() - damage);
-        if(ca.get_time() == timing::aftercombat)
+        if(ca->get_time() == timing::aftercombat)
         {
             card_effects(ca , enemy , g , eca);
         }
         if(eca->get_time() == timing::aftercombat)
         {
-            card_effects(ca , enemy , g , eca);
+            card_effects(eca , enemy , g , ca);
         }
     }
     cout <<"damage: " << damage << endl;

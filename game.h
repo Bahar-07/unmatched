@@ -37,7 +37,7 @@ class game
         void start_game(game & , map & , tui);
         void pick_card(game &);
         void creat_deck();
-        void card_effects(card& , game & , map& , card* = nullptr);
+        void card_effects(card* , game & , map& , card* = nullptr);
         void feeding_frenzy(card &);
         void mistform(map &);
         void ambush(card& ,game &);
@@ -49,7 +49,7 @@ class game
         void expolit();
         void look_into_my_eyes(game &, card & , card*);
         void prey_upon(map & , game & );
-        void attack(game& , map & , card& , card* = nullptr);
+        void attack(game& , map & , card* , card* = nullptr);
         void administer_aid(map&);
         void counterpunch(map& , game&);
         std::vector <character*> get_neighborenemy(character& , game&);
