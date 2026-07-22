@@ -32,9 +32,7 @@ class card
         timing time;
         int value;
         int boost;
-        std::string effect;
     public:
-        card();
         card(std::string , cardtype , cardowner , timing , int , int );
         std::string get_name();
         cardtype get_type();

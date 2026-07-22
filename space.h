@@ -37,7 +37,6 @@ class space
         std::string get_thisspace();
         int show_neighbors();
         int show_neighbors_for_move();
-        bool show_full_neighbors();
         int prey_uponn();
         bool has_zone(zone);
 };

@@ -108,12 +108,12 @@ void space::show_space()
     {
         cout << setw(20) << "]";
     }
-   /* cout << "neighbors: " ;
+    cout << "neighbors: " ;
     for(space* n : get_neighbors())
     {
         
         cout << n->get_id() << " " ;
-    }*/
+    }
     t =0;
     if(get_secret())
     {
@@ -223,9 +223,9 @@ std::string space::get_thisspace()
 }
 int space::show_neighbors()
 {
-int ch;
-int counter = 0;
-std::vector<space*> available; 
+    int ch;
+    int counter = 0;
+    std::vector<space*> available; 
     for(space *s:neighbors)
     {
         if(s->get_thisspace() == "e")
@@ -235,12 +235,20 @@ std::vector<space*> available;
             cout << counter << ". " << s->get_id() <<endl;
         }
     }
-    cin >> ch;
-    if(ch > counter || ch <= 0)
+     if(!available.empty())
     {
-        throw invalid_argument("invalid number");
+        cin >> ch;
+        if(ch > counter || ch <= 0)
+        {
+            throw invalid_argument("invalid number");
+        }
+        return available[ch - 1]->get_id();
     }
-    return available[ch - 1]->get_id();
+    else
+    {
+        cout << " you cant move ...    there isnt any empty space " << endl;
+        return 400;
+    }
 }
 int space::show_neighbors_for_move()
 {
@@ -282,23 +290,6 @@ int space::show_neighbors_for_move()
         cout << " you cant move ...    there isnt any empty space " << endl;
         return 400;
     }
-}
-bool space::show_full_neighbors()
-{
-    int e = 0;
-    for(space *s:neighbors)
-    {
-        if(s->get_thisspace() != "e")
-        {
-            cout << s->get_id() << ". " << s->get_thisspace() << endl ;
-           e++; 
-        }
-    }
-    if(e != 0)
-    {
-        return true;
-    }
-    return false;
 }
 
 int space::prey_uponn()

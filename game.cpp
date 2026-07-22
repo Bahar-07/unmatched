@@ -1257,7 +1257,54 @@ void game::start_game(game & enemy , map & g , tui tu)
         }
         else if(z == 6)
         {
-            tu.main_menu();
+            int ttt=tu.main_menu();
+            while(true)
+            {
+                if(ttt == 0)
+                {
+                    break;
+                }
+                if(ttt == 1)
+                {
+                    cout << "================ HELP ================" << endl;
+                    cout << "Objective:" << endl;
+                    cout << "Defeat the enemy Hero by reducing their Health to 0" << endl << endl;
+
+                    cout << "Actions:" << endl;
+                    cout << "- Maneuver: Move your fighter and draw one card" << endl;
+                    cout << "- Attack: Attack an adjacent enemy" << endl;
+                    cout << "- Scheme: Play a special card effect" << endl << endl;
+
+                    cout << "Card Types:" << endl;
+                    cout << "- Attack" << endl;
+                    cout << "- Defense" << endl;
+                    cout << "- Versatile" << endl;
+                    cout << "- Scheme" << endl << endl;
+                    cout << "Good luck and have fun!" << endl;
+                    cout << "======================================" << endl;
+
+                    cout << "Enter 0 to back to main menu" << endl;
+                    int q;
+                    while (true)
+                    {
+                        cin >> q;
+                        if(q == 0)
+                        {
+                            ttt = tu.main_menu();
+                            break;
+                        }
+                        else
+                        {
+                            cout << "Invalid number" << endl;
+                        }
+                    }
+                }
+                if(ttt == 2)
+                {
+                    cout << "Game Exited" << endl;
+                    exit(0);
+                }
+            }
 
         }
         alive();
@@ -1591,10 +1638,13 @@ void game::administer_aid(map& g)
             std::cerr << e.what() << '\n';
         }
     }
+    if(ch != 400)
+    {
+        sidekicks[0].get_location()->set_thisspacef();
+        sidekicks[0].set_location(g.get_space(ch));
+        g.set_location("Dr.Watson" ,ch);
+    }
     
-    sidekicks[0].get_location()->set_thisspacef();
-    sidekicks[0].set_location(g.get_space(ch));
-    g.set_location("Dr.Watson" ,ch);
     hero.set_hp(hero.get_hp() + 1);
     int random;
     if(deck.size() > 0)

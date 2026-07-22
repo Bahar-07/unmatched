@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 4.2.0)
 
 project(Unmatched)
 
-add_subdirectory(tui/FTXUI-main)
+add_subdirectory(ftxui/FTXUI-main)
 
 add_executable(app
     main.cpp

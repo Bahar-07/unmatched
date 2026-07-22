@@ -235,9 +235,9 @@ void map::move2(character&h)
             {
                 if(s.get_thisspace() == "e")
                 {
+                    h.get_location()->set_thisspacef();
                     h.set_location(&s);
-                    s.set_thisspacef();
-                    set_location("Dracula" ,a);
+                    set_location(h.get_name() ,a);
                 }
                 else
                 {
@@ -287,6 +287,7 @@ void map::move3(character & h , character & si , map& g)
                 {
                     if(s.get_thisspace() == "e")
                     {
+                        si.get_location()->set_thisspacef();
                         si.set_location(get_space(a));
                         set_location(si.get_name() ,a);
                     }

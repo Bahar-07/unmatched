@@ -23,7 +23,6 @@ class game
         std::vector<card> hand;
         std::vector<card> c;
         std::vector<card> b;
-        std::vector<card> discard;
         int action;
         bool alivee;
         int damage;
