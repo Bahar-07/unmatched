@@ -32,8 +32,9 @@ class card
         timing time;
         int value;
         int boost;
+        std::string image;
     public:
-        card(std::string , cardtype , cardowner , timing , int , int );
+        card(std::string , cardtype , cardowner , timing , int , int , std::string );
         std::string get_name();
         cardtype get_type();
         cardowner get_owner();
@@ -43,5 +44,6 @@ class card
         void show_card();
         timing get_time();
         int get_value();
+        std::string get_image_path();
 };
 #endif

@@ -1,9 +1,9 @@
+#include "space.h"
 #include "character.h"
 
 character::character()
 {
     name = "";
-    hp = 0;
     location = nullptr;
     status =true;
 }
@@ -26,7 +26,15 @@ int character::get_hp()
 }
 void character::set_hp(int hp)
 {
-    this->hp = hp;
+    if(hp < 0)
+    {
+        this->hp = 0;
+    }
+    else
+    {
+        this->hp = hp;
+    }
+    
 }
 space* character::get_location()
 {
@@ -45,6 +53,7 @@ void character::set_status()
     if(hp <= 0)
     {
         status = false;
+        get_location()->set_thisspacef();
     }
     else
     {

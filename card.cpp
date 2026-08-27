@@ -1,7 +1,7 @@
 #include "card.h"
 
 
-card::card(std::string n , cardtype  t, cardowner o, timing ti , int v, int b)
+card::card(std::string n , cardtype  t, cardowner o, timing ti , int v, int b , std::string f)
 {
     name = n;
     type =t;
@@ -9,6 +9,11 @@ card::card(std::string n , cardtype  t, cardowner o, timing ti , int v, int b)
     time = ti;
     value = v;
     boost = b;
+    image = f;
+}
+std::string card::get_image_path()
+{
+    return image;
 }
 std::string card::get_name()
 {

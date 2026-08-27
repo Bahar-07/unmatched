@@ -1,41 +1,42 @@
 #include "map.h"
-#include "space.h"
+
+
 #include <iostream>
 
 map::map()
 {
-   spaces.push_back(space(1 , {zone::ice} , true ));
-   spaces.push_back(space(2 , {zone::ice} , false));
-   spaces.push_back(space(3 , {zone::ice} , false));
-   spaces.push_back(space(4 , {zone::ice} , false));
-   spaces.push_back(space(5 , {zone::ice} , false));
-   spaces.push_back(space(6 , {zone::blue , zone::broun} , false));
-   spaces.push_back(space(7 , {zone::ice , zone::blue} , false));
-   spaces.push_back(space(8 , {zone::blue} , false));
-   spaces.push_back(space(9 , {zone::blue , zone::gray} , false));
-   spaces.push_back(space(10 , {zone::blue , zone::green} , false));
-   spaces.push_back(space(11 , {zone::green} , false));
-   spaces.push_back(space(12 , {zone::green} , true));
-   spaces.push_back(space(13 , {zone::green ,zone::gray} , false));
-   spaces.push_back(space(14 , {zone::green ,zone::purple} , false));
-   spaces.push_back(space(15 , {zone::broun , zone::green , zone::white} , false));
-   spaces.push_back(space(16 , {zone::gray} , true));
-   spaces.push_back(space(17 , {zone::gray} , false));
-   spaces.push_back(space(18 , {zone::gray} , false));
-   spaces.push_back(space(19 , {zone::gray} , false));
-   spaces.push_back(space(20 , {zone::gray} , false));
-   spaces.push_back(space(21 , {zone::gray} , false));
-   spaces.push_back(space(22 , {zone::gray} , false));
-   spaces.push_back(space(23 , {zone::gray , zone::purple} , false));
-   spaces.push_back(space(24 , {zone::purple} , false));
-   spaces.push_back(space(25 , {zone::purple} , false));
-   spaces.push_back(space(26 , {zone::purple} , false));
-   spaces.push_back(space(27 , {zone::white} , false));
-   spaces.push_back(space(28 , {zone::white} , false));
-   spaces.push_back(space(29 , {zone::white} , true));
-   spaces.push_back(space(30 , {zone::broun} , false));
-   spaces.push_back(space(31 , {zone::broun} , false));
-   spaces.push_back(space(32 , {zone::broun} , false));
+   spaces.push_back(space(1 , {zone::ice} , true ,{116 , 191}));
+   spaces.push_back(space(2 , {zone::ice} , false , { 264 , 154}));
+   spaces.push_back(space(3 , {zone::ice} , false , {102 , 310}));
+   spaces.push_back(space(4 , {zone::ice} , false , {230 , 320}));
+   spaces.push_back(space(5 , {zone::ice} , false , { 350 , 274}));
+   spaces.push_back(space(6 , {zone::blue , zone::broun} , false , {388 , 404}));
+   spaces.push_back(space(7 , {zone::ice , zone::blue} , false , {266 , 450}));
+   spaces.push_back(space(8 , {zone::blue} , false , {134 , 482}));
+   spaces.push_back(space(9 , {zone::blue , zone::gray} , false , {204 , 624}));
+   spaces.push_back(space(10 , {zone::blue , zone::green} , false , {392 , 564}));
+   spaces.push_back(space(11 , {zone::green} , false , {542 , 490}));
+   spaces.push_back(space(12 , {zone::green} , true , {654 , 428}));
+   spaces.push_back(space(13 , {zone::green ,zone::gray} , false , {588 , 620}));
+   spaces.push_back(space(14 , {zone::green ,zone::purple} , false , {800 , 484}));
+   spaces.push_back(space(15 , {zone::broun , zone::green , zone::white} , false ,{802 , 268}));
+   spaces.push_back(space(16 , {zone::gray} , true , {268 , 718}));
+   spaces.push_back(space(17 , {zone::gray} , false , {388 , 692}));
+   spaces.push_back(space(18 , {zone::gray} , false , {508 , 710}));
+   spaces.push_back(space(19 , {zone::gray} , false , {640 , 722}));
+   spaces.push_back(space(20 , {zone::gray} , false , {738 , 648}));
+   spaces.push_back(space(21 , {zone::gray} , false , {886 , 652}));
+   spaces.push_back(space(22 , {zone::gray} , false , {992 , 720}));
+   spaces.push_back(space(23 , {zone::gray , zone::purple} , false , {1078 , 636}));
+   spaces.push_back(space(24 , {zone::purple} , false , {1062 , 490}));
+   spaces.push_back(space(25 , {zone::purple} , false , {924 , 514}));
+   spaces.push_back(space(26 , {zone::purple} , false , {980 , 406}));
+   spaces.push_back(space(27 , {zone::white} , false , {990 , 276}));
+   spaces.push_back(space(28 , {zone::white} , false , {922 , 188}));
+   spaces.push_back(space(29 , {zone::white} , true , {1068 , 192}));
+   spaces.push_back(space(30 , {zone::broun} , false , {678 , 180}));
+   spaces.push_back(space(31 , {zone::broun} , false , {606 , 272}));
+   spaces.push_back(space(32 , {zone::broun} , false , {466 , 180}));
     neighborr();
     secret_pass();
 }
@@ -177,7 +178,7 @@ void map::set_location(std::string b , int a)
         }
     }
 }
-void map::move(std::string c ,int l , character& character , map & g)
+void map::move(std::string c ,int l , character& character , map & g ,ui t)
 {
     g.show_map();
     int ch;
@@ -188,15 +189,10 @@ void map::move(std::string c ,int l , character& character , map & g)
         {
            while (true)
            {
-                try
-                {
-                    ch = s.show_neighbors_for_move();
+                    ch = s.show_neighbors_for_move(t, g);
                     break;
-                }
-                catch(const std::exception& e)
-                {
-                    std::cerr << e.what() << '\n';
-                }
+                
+                
            }
            if(ch == 400)
            {
@@ -218,11 +214,45 @@ void map::move(std::string c ,int l , character& character , map & g)
     character.set_location(get_space(ch));
     set_location(c ,ch);
 }
-void map::move2(character&h)
+void map::move_invisibleman(std::string c ,int l , character& character , map & g, game & p , ui tu)
 {
+    g.show_map();
+    int ch;
+    std::cout << "where do you want to go?" << std::endl ;
+    for(space &s:spaces)
+    {
+        if(s.get_id() == l)
+        {
+            
+            ch = s.move_invisible(p ,tu ,g);
+            
+                
+           
+           if(ch == 400)
+           {
+                break;
+                return;
+           }
+           else
+           {
+                s.set_thisspacef();
+                break;
+           }
+            
+        }
+    }
+    if(ch == 400)
+    {
+        return;
+    }
+    character.set_location(get_space(ch));
+    set_location(c ,ch);
+}
+void map::move2(character&h , ui ee)
+{
+    
     int a;
-    std::cout << "where do you want to go? (1  32)" << std::endl;
-    std::cin >> a;
+    a =std::stoi( ee.get_text_input("where do you want to go? (1  32)"));
     if(a> 32 || a < 1)
     {
         throw std::invalid_argument("please choose (1 - 32)");
@@ -241,19 +271,18 @@ void map::move2(character&h)
                 }
                 else
                 {
-                    std::cout << "this space isnt empty" << std::endl;
-                    move2(h);
+                    ee.p("this space isnt empty");
+                    move2(h , ee);
                 }
             }
         }
     }
 
 }
-void map::move3(character & h , character & si , map& g)
+void map::move3(character & h , character & si , map& g , ui ee)
 {
     int a;
-    std::cout << "where do you want to go? (1  32 (pay attention to the zone color))" << std::endl;
-    std::cin >> a;
+    a =std::stoi(ee.get_text_input("where do you want to go? (1  32 (pay attention to the zone color))"));
     if(a> 32 || a < 1)
     {
         throw std::invalid_argument("please choose (1 - 32)");
@@ -275,8 +304,9 @@ void map::move3(character & h , character & si , map& g)
         }
         if(t == 0)
         {
+            ee.p("you cant choose this space");
             std::cout << "you cant choose this space" << std::endl;
-            move3(h,si,g);
+            move3(h,si,g, ee);
         } 
         else
         {
@@ -293,11 +323,23 @@ void map::move3(character & h , character & si , map& g)
                     }
                     else
                     {
+                        ee.p("this space isnt empty");
                         std::cout << "this space isnt empty" << std::endl;
-                        move3(h , si , g);
+                        move3(h , si , g , ee);
                     }
                 }
             }
+        }
+    }
+}
+
+void map::set_locationf(std::string b, int a)
+{
+    for(space &s:spaces)
+    {
+        if(s.get_id() == a)
+        {
+            s.set_fogt(b);
         }
     }
 }

@@ -4,11 +4,12 @@
 using namespace std;
 
 
-space::space(int id , std::vector<zone> zones , bool secret)
+space::space(int id , std::vector<zone> zones , bool secret, Vector2 s)
 {
     this->id = id;
     this->zones = zones;
     this->secret = secret;
+    ss = s;
 }
 int space::get_id()
 {
@@ -118,7 +119,7 @@ void space::show_space()
     if(get_secret())
     {
         
-        cout << right <<setw(45) <<"secret passage " ;
+        cout << right <<setw(45) <<"secret passage ";
         t +=1;
     }
     if(thisspace != "e")
@@ -128,7 +129,7 @@ void space::show_space()
             if(t == 1)
             {
                 
-                cout <<  right << setw(30) <<"Dracula" << endl;
+                cout <<  right << setw(30) <<"Dracula" << endl ;
             }
             if(t == 0)
             {
@@ -172,7 +173,7 @@ void space::show_space()
             if(t == 0)
             {
                 
-                cout <<  right << setw(75) <<"sister 3" << endl;
+                cout <<  right << setw(75) <<"sister 3"<< endl ;
             }
         }
         if(thisspace == "Sherlock Holmes")
@@ -185,7 +186,7 @@ void space::show_space()
             if(t == 0)
             {
                 
-                cout <<  right << setw(75) <<"Sherlock Holmes" << endl;
+                cout <<  right << setw(75) <<"Sherlock Holmes" << endl ;
             }
         }
         if(thisspace == "Dr.Watson")
@@ -193,21 +194,52 @@ void space::show_space()
             if(t == 1)
             {
                 
-                cout <<  right << setw(30) <<"Dr.Watson" << endl;
+                cout <<  right << setw(30) <<"Dr.Watson" << endl ;
             }
             if(t == 0)
             {
                 
-                cout <<  right << setw(75) <<"Dr.Watson" << endl;
+                cout <<  right << setw(75) <<"Dr.Watson" << endl ;
             }
         }
+        if(thisspace == "Invisible Man")
+        {
+            if(t == 1)
+            {
+                
+                cout <<  right << setw(30) <<"Invisisble Man" << endl;
+            }
+            if(t == 0)
+            {
+                
+                cout <<  right << setw(75) <<"Invisisble Man" << endl;
+            }
+        }
+        if(fogg == "fog")
+        {
+            cout <<  right << setw(30) <<"fog" << endl;
+        }
     }
-        
     else
     {
+        if(fogg == "fog")
+        {
+            cout <<  right << setw(30) <<"fog" << endl;
+        }
+        else
+        {
+            cout << endl;
+        }
         
-        cout << endl;
     }
+}
+void space::set_fogt(string b)
+{
+    fogg = b;
+}
+void space::set_fogf()
+{
+    fogg = "e";
 }
 void space::set_thisspacet(string b)
 {
@@ -221,46 +253,79 @@ std::string space::get_thisspace()
 {
     return thisspace;
 }
-int space::show_neighbors()
+int space::show_neighbors( map& g , std::string a)
 {
+    ui e;
     int ch;
     int counter = 0;
     std::vector<space*> available; 
+    std::vector<int> aaa;
     for(space *s:neighbors)
     {
         if(s->get_thisspace() == "e")
         {
             counter++;
             available.push_back(s);
+            aaa.push_back(s->get_id());
             cout << counter << ". " << s->get_id() <<endl;
         }
     }
      if(!available.empty())
     {
-        cin >> ch;
-        if(ch > counter || ch <= 0)
-        {
-            throw invalid_argument("invalid number");
-        }
-        return available[ch - 1]->get_id();
+        ch= e.choose_space(g ,a, aaa);
+        return available[ch]->get_id();
     }
     else
     {
+        e.p("you cant move...there isnt any empty space");
         cout << " you cant move ...    there isnt any empty space " << endl;
         return 400;
     }
 }
-int space::show_neighbors_for_move()
+int space::show_neighbors_fog( map& g , std::string a)
+{
+    ui e;
+    int ch;
+    int counter = 0;
+    std::vector<space*> available; 
+    std::vector<int> aaa;
+    for(space *s:neighbors)
+    {
+        if(s->fogg == "e")
+        {
+            counter++;
+            available.push_back(s);
+            aaa.push_back(s->get_id());
+            cout << counter << ". " << s->get_id() <<endl;
+        }
+    }
+     if(!available.empty())
+    {
+        set_fogf();
+        ch= e.choose_space(g ,a, aaa);
+        available[ch]->set_fogt("fog");
+        return available[ch]->get_id();
+    }
+    else
+    {
+        e.p("you cant move...there isnt any empty space");
+        cout << " you cant move ...    there isnt any empty space " << endl;
+        return 400;
+    }
+}
+int space::show_neighbors_for_move(ui t , map & g)
 {
     int ch;
     int counter = 0;
     std::vector<space*> available; 
+    std::vector<int> aaa;
     for(space *s:neighbors)
     {
         if(s->get_thisspace() == "e")
         {
             counter++;
             available.push_back(s);
+            aaa.push_back(s->get_id());
             cout << counter << ". " << s->get_id() <<endl;
         }
     }
@@ -272,18 +337,68 @@ int space::show_neighbors_for_move()
             {
                 counter++;
                 available.push_back(a);
+                aaa.push_back(a->get_id());
                 cout << counter << ". " << a->get_id() <<endl;
             }
         }
     }
     if(!available.empty())
     {
-        cin >> ch;
-        if(ch > counter || ch <= 0)
+        ch = t.choose_space(g , "where do you want to go?" , aaa);
+        //cin >> ch;
+        return available[ch]->get_id();
+    }
+    else
+    {
+        t.p( " you cant move...there isnt any empty space ");
+        cout << " you cant move ...    there isnt any empty space " << endl;
+        return 400;
+    }
+}
+int space::move_invisible(game& p , ui t , map & g)
+{
+    int ch;
+    int counter = 0;
+    std::vector<space*> available; 
+    std::vector<int> aaa;
+    for(space *s:neighbors)
+    {
+        if(s->get_thisspace() == "e")
         {
-            throw invalid_argument("invalid number");
+            counter++;
+            available.push_back(s);
+            aaa.push_back(s->get_id());
+            cout << counter << ". " << s->get_id() <<endl;
         }
-        return available[ch - 1]->get_id();
+    }
+    if(get_secret())
+    {
+        for(auto *a:secret_passagee)
+        {
+            if(a->get_thisspace() == "e" || a->get_thisspace() == "fog")
+            {
+                counter++;
+                available.push_back(a);
+                aaa.push_back(a->get_id());
+                cout << counter << ". " << a->get_id() <<endl;
+            }
+        }
+    }
+    if(fogg == "fog")
+    {
+        for(space* fog: p.get_fog())
+        {
+            if(fog != this)
+            {
+                available.push_back(fog);
+            }
+        }
+        counter = counter + 2;
+    }
+    if(!available.empty())
+    {
+        ch = t.choose_space(g , "where do you want to go?" , aaa);
+        return available[ch]->get_id();
     }
     else
     {
@@ -291,7 +406,10 @@ int space::show_neighbors_for_move()
         return 400;
     }
 }
-
+Vector2 space::get()
+{
+    return ss;
+}
 int space::prey_uponn()
 {
     int sh = 0;
