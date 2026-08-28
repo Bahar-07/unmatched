@@ -391,6 +391,7 @@ int space::move_invisible(game& p , ui t , map & g)
             if(fog != this)
             {
                 available.push_back(fog);
+                aaa.push_back(fog->get_id());
             }
         }
         counter = counter + 2;

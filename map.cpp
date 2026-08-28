@@ -231,7 +231,6 @@ void map::move_invisibleman(std::string c ,int l , character& character , map & 
            if(ch == 400)
            {
                 break;
-                return;
            }
            else
            {

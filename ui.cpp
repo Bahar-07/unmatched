@@ -21,6 +21,7 @@ int ui::action_menu()
         Rectangle my   = {850, 850, 170, 40};
         Rectangle enemy   = {1050, 850, 170, 40};
         Rectangle save   = {1250, 850, 170, 40};
+        Rectangle help   = {1255, 20, 170, 40};
         if (button(maneuver, "Maneuver"))
         {
             
@@ -58,7 +59,11 @@ int ui::action_menu()
             
             return 6;
         }
-        
+        if (button(help , "Help"))
+        {
+            
+            return 7;
+        }
     
 
     return -1;

@@ -75,7 +75,7 @@ class game
         void reign_of_terror(game&);
         void rolling_fog(map& , ui);
         void slip_away();
-        void step_lightly();
+        void step_lightly(game&);
         void vanish();
         void save(std::string , game);
         void load_game(std::string ,map& , int );

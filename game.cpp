@@ -1227,7 +1227,25 @@ void game::start_game(game & enemy , map & g , ui tu)
                     cout << "Fogs space:    " << enemy.fogs[0]->get_id() << " , " << enemy.fogs[1]->get_id() << " , " << enemy.fogs[2]->get_id() << endl;
             }
             }
-            
+            else if(z == 7)
+            {
+                tu.showhelp( "================ HELP ================ \n"
+                "Objective:\n"
+                "Defeat the enemy Hero by reducing their Health to 0\n"
+
+                "Actions:\n"
+                "- Maneuver: Move your fighter and draw one card\n"
+                "- Attack: Attack an adjacent enemy\n"
+                "- Scheme: Play a special card effect\n"
+
+                "Card Types:\n"
+                "- Attack\n"
+                "- Defense\n"
+                "- Versatile\n"
+                "- Scheme\n"
+                "Good luck and have fun!\n"
+                "======================================\n" , 8);
+            }
             else if(z == 6)
             {
                 ui l;
@@ -1403,7 +1421,7 @@ void game::card_effects(card * ca , game & enemy , map & g , ui tu, card * eca )
     }
     if(ca->get_name() == "step lightly")
     {
-        step_lightly();
+        step_lightly(enemy);
     }
     if(ca->get_name() == "vanish")
     {
@@ -1941,8 +1959,24 @@ void game::slip_away()
     
 
 }
-void game::step_lightly()
+void game::step_lightly(game& enemy)
 {
+    //
+    ui ee;
+    if(!get_neighborenemy(hero , enemy).empty())
+    {
+        if(hero.get_location() == fogs[0] || hero.get_location() == fogs[1] || hero.get_location() == fogs[2])
+        {
+            int y = ee.choose_aacharacter("choose target" , get_neighborenemy(hero , enemy));
+            get_neighborenemy(hero, enemy)[y]->set_hp(get_neighborenemy(hero, enemy)[y]->get_hp() - 3);
+           
+        }
+        else
+        {
+            int y = ee.choose_aacharacter("choose target" , get_neighborenemy(hero , enemy));
+            get_neighborenemy(hero, enemy)[y]->set_hp(get_neighborenemy(hero, enemy)[y]->get_hp() - 1);
+        }
+    }
     
 }
 void game::vanish()
@@ -2323,7 +2357,7 @@ void game::attack(game & enemy , map & g , card* ca, ui tu,card* eca )
         {
             card_effects(eca , enemy , g , tu, ca );
         }
-        if(target->get_name() == "Invisible Man" && (target->get_location() == fogs[0] || target->get_location() == fogs[1] || target->get_location() == fogs[2]))
+        if(target->get_name() == "Invisible Man" && (target->get_location() == enemy.fogs[0] || target->get_location() == enemy.fogs[1] || target->get_location() == enemy.fogs[2]))
         {
             damage = eca->get_value() - (ca->get_value()+1);
             if(damage < 0)
@@ -2746,75 +2780,75 @@ void game::load_game(string a , map& g , int l)
             if(i == l)
             {
                  if(d == "feeding frenzy")
-                    deck.push_back(card("feeding frenzy" ,{cardtype::attack} , {cardowner::hero} , {timing::duringccombat} , 2 , 3 , "feeding-frenzy.png"));
+                    hand.push_back(card("feeding frenzy" ,{cardtype::attack} , {cardowner::hero} , {timing::duringccombat} , 2 , 3 , "feeding-frenzy.png"));
                 if(d == "mistform")
-                    deck.push_back(card("mistform" ,{cardtype::scheme} , {cardowner::hero} , {timing::none} , 0 , 2 , "mistform.png"));
+                    hand.push_back(card("mistform" ,{cardtype::scheme} , {cardowner::hero} , {timing::none} , 0 , 2 , "mistform.png"));
                 if(d == "ambush") 
-                    deck.push_back(card("ambush" ,{cardtype::attack} , {cardowner::any} , {timing::duringccombat} , 2 , 3 , "ambush.png"));
+                    hand.push_back(card("ambush" ,{cardtype::attack} , {cardowner::any} , {timing::duringccombat} , 2 , 3 , "ambush.png"));
                 if(d == "baptism of blood")
-                    deck.push_back(card("baptism of blood" ,{cardtype::scheme} , {cardowner::hero} , {timing::none} , 0 , 2 , "baptism-of-blood.png"));
+                    hand.push_back(card("baptism of blood" ,{cardtype::scheme} , {cardowner::hero} , {timing::none} , 0 , 2 , "baptism-of-blood.png"));
                 if(d == "beastform")
-                    deck.push_back(card("beastform" ,{cardtype::attack} , {cardowner::hero} , {timing::duringccombat} , 6 , 4 , "beastform.png"));
+                    hand.push_back(card("beastform" ,{cardtype::attack} , {cardowner::hero} , {timing::duringccombat} , 6 , 4 , "beastform.png"));
                 if(d == "dash")
-                    deck.push_back(card("dash" ,{cardtype::versatile} , {cardowner::any} , {timing::aftercombat} , 3 , 1 , "dash.png"));
+                    hand.push_back(card("dash" ,{cardtype::versatile} , {cardowner::any} , {timing::aftercombat} , 3 , 1 , "dash.png"));
                 if(d == "exploit")
-                    deck.push_back(card("exploit" ,{cardtype::versatile} , {cardowner::any} , {timing::aftercombat} , 4 , 1 , "exploit.png"));
+                    hand.push_back(card("exploit" ,{cardtype::versatile} , {cardowner::any} , {timing::aftercombat} , 4 , 1 , "exploit.png"));
                 if(d == "look into my eyes")
-                    deck.push_back(card("look into my eyes" ,{cardtype::defense} , {cardowner::hero} , {timing::duringccombat} , 1 , 2 , "look-into-my-eyes.png"));
+                    hand.push_back(card("look into my eyes" ,{cardtype::defense} , {cardowner::hero} , {timing::duringccombat} , 1 , 2 , "look-into-my-eyes.png"));
                 if(d == "pray upon")
-                    deck.push_back(card("pray upon" ,{cardtype::scheme} , {cardowner::hero} , {timing::none} , 0 , 4 , "prey-upon.png"));
+                    hand.push_back(card("pray upon" ,{cardtype::scheme} , {cardowner::hero} , {timing::none} , 0 , 4 , "prey-upon.png"));
                 if( d == "ravening seduction")
-                    deck.push_back(card("ravening seduction" ,{cardtype::scheme} , {cardowner::sidekick} , {timing::none} , 0 , 2 , "ravening-seduction.png"));
+                    hand.push_back(card("ravening seduction" ,{cardtype::scheme} , {cardowner::sidekick} , {timing::none} , 0 , 2 , "ravening-seduction.png"));
                 if(d == "thirst for sustenance")
-                    deck.push_back(card("thirst for sustenance" ,{cardtype::attack} , {cardowner::sidekick} , {timing::aftercombat} , 3 , 3 , "thirst-for-sustenance.png"));
+                    hand.push_back(card("thirst for sustenance" ,{cardtype::attack} , {cardowner::sidekick} , {timing::aftercombat} , 3 , 3 , "thirst-for-sustenance.png"));
                 if(d == "feint")
-                    deck.push_back(card("feint" ,{cardtype::versatile} , {cardowner::any} , {timing::beforcombat} , 2 , 2 , "feint (1).png"));
+                    hand.push_back(card("feint" ,{cardtype::versatile} , {cardowner::any} , {timing::beforcombat} , 2 , 2 , "feint (1).png"));
                 if(d == "administer aid")
-                    deck.push_back(card("administer aid" ,{cardtype::scheme} , {cardowner::sidekick} , {timing::none} , 0 , 2 , "administer-aid.png"));
+                    hand.push_back(card("administer aid" ,{cardtype::scheme} , {cardowner::sidekick} , {timing::none} , 0 , 2 , "administer-aid.png"));
                 if(d == "counterpunch")
-                    deck.push_back(card("counterpunch" ,{cardtype::versatile} , {cardowner::hero} , {timing::aftercombat} , 3 , 1 , "counterpunch.png"));
+                    hand.push_back(card("counterpunch" ,{cardtype::versatile} , {cardowner::hero} , {timing::aftercombat} , 3 , 1 , "counterpunch.png"));
                 if(d == "deduce strategy")
-                    deck.push_back(card("deduce strategy" ,{cardtype::versatile} , {cardowner::hero} , {timing::duringccombat} , 3 , 1 , "deduce-strategy.png"));
+                    hand.push_back(card("deduce strategy" ,{cardtype::versatile} , {cardowner::hero} , {timing::duringccombat} , 3 , 1 , "deduce-strategy.png"));
                 if(d == "education never ends")
-                    deck.push_back(card("education never ends" ,{cardtype::versatile} , {cardowner::any} , {timing::aftercombat} , 3 , 1 , "education-never-ends.png"));
+                    hand.push_back(card("education never ends" ,{cardtype::versatile} , {cardowner::any} , {timing::aftercombat} , 3 , 1 , "education-never-ends.png"));
                 if(d == "eliminate the impossible")
-                    deck.push_back(card("eliminate the impossible" ,{cardtype::scheme} , {cardowner::hero} , {timing::none} , 0 , 2 , "eliminate-the-impossible.png"));
+                    hand.push_back(card("eliminate the impossible" ,{cardtype::scheme} , {cardowner::hero} , {timing::none} , 0 , 2 , "eliminate-the-impossible.png"));
                 if(d == "feint_")
-                    deck.push_back(card("feint_" ,{cardtype::versatile} , {cardowner::any} , {timing::beforcombat} , 2 , 1 , "feint (2).png"));
+                    hand.push_back(card("feint_" ,{cardtype::versatile} , {cardowner::any} , {timing::beforcombat} , 2 , 1 , "feint (2).png"));
                 if(d == "fixed point in a changing age")
-                    deck.push_back(card("fixed point in a changing age" ,{cardtype::versatile} , {cardowner::sidekick} , {timing::aftercombat} , 3 , 1 , "fixed-point-in-a-changing-age.png"));
+                    hand.push_back(card("fixed point in a changing age" ,{cardtype::versatile} , {cardowner::sidekick} , {timing::aftercombat} , 3 , 1 , "fixed-point-in-a-changing-age.png"));
                 if(d == "master of disguise")
-                    deck.push_back(card("master of disguise" ,{cardtype::scheme} , {cardowner::hero} , {timing::none} , 0 , 2 , "master-of-disguise.png"));
+                    hand.push_back(card("master of disguise" ,{cardtype::scheme} , {cardowner::hero} , {timing::none} , 0 , 2 , "master-of-disguise.png"));
                 if(d == "the game is afoot")
-                    deck.push_back(card("the game is afoot" ,{cardtype::attack} , {cardowner::hero} , {timing::aftercombat} , 5 , 2 ,"the-game-is-afoot.png"));
+                    hand.push_back(card("the game is afoot" ,{cardtype::attack} , {cardowner::hero} , {timing::aftercombat} , 5 , 2 ,"the-game-is-afoot.png"));
                 if(d == "service revolver")
-                    deck.push_back(card("service revolver" ,{cardtype::attack} , {cardowner::sidekick} , {timing::none} , 5 , 3 , "service-revolver.png"));
+                    hand.push_back(card("service revolver" ,{cardtype::attack} , {cardowner::sidekick} , {timing::none} , 5 , 3 , "service-revolver.png"));
                 if(d == "study methodes")
-                    deck.push_back(card("study methodes" ,{cardtype::versatile} , {cardowner::any} , {timing::aftercombat} , 3 , 2 , "study-methods.png"));
+                    hand.push_back(card("study methodes" ,{cardtype::versatile} , {cardowner::any} , {timing::aftercombat} , 3 , 2 , "study-methods.png"));
                 if(d == "coded notes" )
-                    deck.push_back(card("coded notes" ,{cardtype::defense} , {cardowner::hero} , {timing::aftercombat} , 3 , 2 , "coded-notes.png"));
+                    hand.push_back(card("coded notes" ,{cardtype::defense} , {cardowner::hero} , {timing::aftercombat} , 3 , 2 , "coded-notes.png"));
                 if(d == "covert preparation")
-                    deck.push_back(card("covert preparation" ,{cardtype::versatile} , {cardowner::hero} , {timing::aftercombat} , 2 , 1 , "covert-preparation.png"));
+                    hand.push_back(card("covert preparation" ,{cardtype::versatile} , {cardowner::hero} , {timing::aftercombat} , 2 , 1 , "covert-preparation.png"));
                 if(d == "dreaming of revenge")
-                    deck.push_back(card("dreaming of revenge" ,{cardtype::versatile} , {cardowner::hero} , {timing::aftercombat} , 3 , 1 , "dreaming-of-revenge.png"));
+                    hand.push_back(card("dreaming of revenge" ,{cardtype::versatile} , {cardowner::hero} , {timing::aftercombat} , 3 , 1 , "dreaming-of-revenge.png"));
                 if(d == "emerge from mist")
-                    deck.push_back(card("emerge from mist" ,{cardtype::attack} , {cardowner::hero} , {timing::duringccombat} , 3 , 2 , "emerge-from-mist.png"));
+                    hand.push_back(card("emerge from mist" ,{cardtype::attack} , {cardowner::hero} , {timing::duringccombat} , 3 , 2 , "emerge-from-mist.png"));
                 if(d == "impossible yo see")
-                    deck.push_back(card("impossible yo see" ,{cardtype::versatile} , {cardowner::hero} , {timing::beforcombat} , 2 , 2 , "impossible-to-see.png"));
+                    hand.push_back(card("impossible yo see" ,{cardtype::versatile} , {cardowner::hero} , {timing::beforcombat} , 2 , 2 , "impossible-to-see.png"));
                 if( d == "into thin air")
-                    deck.push_back(card("into thin air" ,{cardtype::defense} , {cardowner::hero} , {timing::aftercombat} , 4 , 1 , "into-thin-air.png"));
+                    hand.push_back(card("into thin air" ,{cardtype::defense} , {cardowner::hero} , {timing::aftercombat} , 4 , 1 , "into-thin-air.png"));
                 if(d == "lurking")
-                    deck.push_back(card("lurking" ,{cardtype::defense} , {cardowner::hero} , {timing::aftercombat} , 2 , 2 , "lurking.png"));
+                    hand.push_back(card("lurking" ,{cardtype::defense} , {cardowner::hero} , {timing::aftercombat} , 2 , 2 , "lurking.png"));
                 if(d == "ring of terror")
-                    deck.push_back(card("ring of terror" ,{cardtype::scheme} , {cardowner::hero} , {timing::none} , 0 , 1 , "reign-of-terror.png"));
+                    hand.push_back(card("ring of terror" ,{cardtype::scheme} , {cardowner::hero} , {timing::none} , 0 , 1 , "reign-of-terror.png"));
                 if(d == "rolling fog")
-                    deck.push_back(card("rolling fog" ,{cardtype::scheme} , {cardowner::hero} , {timing::none} , 0 , 1 , "rolling-fog.png"));
+                    hand.push_back(card("rolling fog" ,{cardtype::scheme} , {cardowner::hero} , {timing::none} , 0 , 1 , "rolling-fog.png"));
                 if(d == "slip away")
-                    deck.push_back(card("slip away" ,{cardtype::attack} , {cardowner::hero} , {timing::aftercombat} , 3 , 2 , "slip-away.png"));
+                    hand.push_back(card("slip away" ,{cardtype::attack} , {cardowner::hero} , {timing::aftercombat} , 3 , 2 , "slip-away.png"));
                 if(d == "step lightly")
-                    deck.push_back(card("step lightly" ,{cardtype::scheme} , {cardowner::hero} , {timing::none} , 0 , 1 , "step-lightly.png"));
+                    hand.push_back(card("step lightly" ,{cardtype::scheme} , {cardowner::hero} , {timing::none} , 0 , 1 , "step-lightly.png"));
                 if(d == "vanish")
-                    deck.push_back(card("vanish" ,{cardtype::scheme} , {cardowner::hero} , {timing::none} , 0 , 3 , "vanish.png"));
+                    hand.push_back(card("vanish" ,{cardtype::scheme} , {cardowner::hero} , {timing::none} , 0 , 3 , "vanish.png"));
             }
         }
     }

@@ -74,9 +74,9 @@ int main()
 
     Rectangle load = {550, 350, 300, 70};
 
-     Rectangle help = {550, 450, 300, 70};
+     Rectangle exitt = {550, 450, 300, 70};
 
-    Rectangle exitt = {550, 550,300, 70 };
+   
 
     while (!WindowShouldClose())
     {
@@ -85,8 +85,6 @@ int main()
         bool mouses = CheckCollisionPointRec(mouse, start);
 
         bool mousel =CheckCollisionPointRec(mouse, load);
-
-        bool mouseh =CheckCollisionPointRec(mouse, help);
 
         bool mousex = CheckCollisionPointRec(mouse, exitt);
 
@@ -103,14 +101,9 @@ int main()
                 choice = 1;
                 break;
             }
-            if (mouseh)
-            {
-                choice = 2;
-                break;
-            }
             if (mousex)
             {
-                choice = 3;
+                choice = 2;
                 break;
             }
         }
@@ -144,17 +137,7 @@ int main()
 
         DrawText("LOAD GAME",625,372,25,WHITE );
 
-        if (mouseh)
-        {
-            DrawRectangleRec(help,Color{60, 60, 80, 255});
-        }
-        else
-        {
-            DrawRectangleRec(help,BLACK);
-        }
-
-        DrawText("HELP",675,472,25,WHITE );
-
+        
         if (mousex)
         {
             DrawRectangleRec(exitt, RED);
@@ -164,7 +147,7 @@ int main()
             DrawRectangleRec(exitt,BLACK);
         }
 
-        DrawText("EXIT", 675, 572,25, WHITE );
+        DrawText("EXIT", 675, 472,25, WHITE );
 
         EndDrawing();
     }
@@ -315,25 +298,6 @@ int main()
             }
         }
         if(choice == 2)
-        {
-            t.showhelp( "================ HELP ================ \n"
-            "Objective:\n"
-            "Defeat the enemy Hero by reducing their Health to 0\n"
-
-            "Actions:\n"
-            "- Maneuver: Move your fighter and draw one card\n"
-            "- Attack: Attack an adjacent enemy\n"
-            "- Scheme: Play a special card effect\n"
-
-            "Card Types:\n"
-            "- Attack\n"
-            "- Defense\n"
-            "- Versatile\n"
-            "- Scheme\n"
-            "Good luck and have fun!\n"
-            "======================================\n" , 8);
-        }
-        if(choice == 3)
         {
             cout << "Game Exited" << endl;
             exit(0);
